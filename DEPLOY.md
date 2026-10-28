@@ -84,9 +84,16 @@ The admin has an **Import photos from Dropbox** screen (Media → Import photos 
 cd allintanzania-website
 git pull
 docker compose up -d --build
+docker compose --profile tools build seed
 ```
 
 Database changes are applied automatically when the new version starts.
+
+Forgot the admin password? This gives the `SEED_ADMIN_EMAIL` account a new one and prints it:
+
+```bash
+docker compose --profile tools run --rm -e RESET_ADMIN_PASSWORD=1 seed
+```
 
 ## Backups
 
