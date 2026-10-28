@@ -23,7 +23,15 @@ cd allintanzania-website
 
 The repository is private, so GitHub asks you to sign in. Use a [personal access token](https://github.com/settings/tokens) with read access to the repository as the password.
 
-## 3. Settings
+## 3. Quick setup (recommended)
+
+```bash
+bash scripts/setup-droplet.sh
+```
+
+It asks for your admin email, Claude API key and ElevenLabs key (typing is hidden), writes `.env`, starts the site and loads the starter content. When it finishes it prints your web address and the admin password. You can then skip to **Connect Dropbox**, or read on for the manual steps.
+
+## 3b. Settings (manual)
 
 ```bash
 cp .env.example .env
@@ -43,7 +51,7 @@ Fill in at least:
 
 Leave `DATABASE_URL` as it is; docker compose sets it. Optional: `ELEVENLABS_API_KEY` for a natural voice, `SMTP_*` to email enquiries to the team, and `S3_*` to keep photos in DigitalOcean Spaces.
 
-## 4. Start it
+## 4. Start it (manual)
 
 ```bash
 docker compose up -d --build
