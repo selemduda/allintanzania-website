@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
 
@@ -9,6 +10,8 @@ import { getPayloadClient, getPublicExpert } from '@/lib/payload'
 import type { Destination, Itinerary } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = { alternates: { canonical: '/' } }
 
 export default async function HomePage() {
   const payload = await getPayloadClient()

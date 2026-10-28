@@ -3,9 +3,14 @@ import React from 'react'
 
 import { EnquiryForm } from '@/components/EnquiryForm'
 import { getSiteSettings } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Contact us' }
+export const metadata: Metadata = pageMeta({
+  path: '/contact',
+  title: 'Contact us',
+  description: 'Talk to our safari experts in Norway and Tanzania about your tailor-made Tanzania safari.',
+})
 
 export default async function ContactPage() {
   const site = await getSiteSettings()

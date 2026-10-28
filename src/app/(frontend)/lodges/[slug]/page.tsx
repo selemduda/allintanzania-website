@@ -9,6 +9,7 @@ import { RichText } from '@/components/RichText'
 import { rel } from '@/lib/format'
 import { findBySlug } from '@/lib/payload'
 import type { Destination } from '@/payload-types'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +17,7 @@ type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const l = await findBySlug('lodges', (await params).slug)
-  return l ? { title: l.name, description: l.summary } : {}
+  return l ? pageMeta({ path: `/lodges/${l.slug}`, title: l.name, description: l.summary, image: l.heroImage }) : {}
 }
 
 export default async function LodgePage({ params }: Props) {

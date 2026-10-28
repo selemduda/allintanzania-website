@@ -108,5 +108,6 @@ Photos live in the `media` Docker volume, or in Spaces if that is configured.
 ## Going live on allintanzania.com later
 
 1. Point the domain's A record (and `www`) to the Droplet's IP.
-2. Change `SITE_DOMAIN` to `allintanzania.com` and `NEXT_PUBLIC_SERVER_URL` to `https://allintanzania.com` in `.env`.
+2. Change `SITE_DOMAIN` to `allintanzania.com` and `NEXT_PUBLIC_SERVER_URL` to `https://allintanzania.com` in `.env`, and set `SITE_INDEXABLE=true` so search engines may index the site (the test site keeps it off).
 3. Run `docker compose up -d --build`. Caddy fetches the certificate automatically.
+4. Add the site to [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters) (Bing also feeds DuckDuckGo and Ecosia), and submit `https://allintanzania.com/sitemap.xml` in both.

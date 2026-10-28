@@ -5,7 +5,8 @@ import React from 'react'
 import { ExpertLauncher } from '@/components/ExpertLauncher'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
-import { getPublicExpert } from '@/lib/payload'
+import { getPublicExpert, getSiteSettings } from '@/lib/payload'
+import { indexable, jsonLd, siteUrl } from '@/lib/seo'
 import './styles.css'
 
 const serif = Cormorant_Garamond({
@@ -16,8 +17,9 @@ const serif = Cormorant_Garamond({
 })
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+// A function, so the indexing switch is read when the site runs rather than when it is built.
+export const generateMetadata = (): Metadata => ({
+  metadataBase: new URL(siteUrl()),
   title: {
     default: 'All in Tanzania · Tailor-made Tanzania safaris',
     template: '%s · All in Tanzania',
@@ -25,13 +27,29 @@ export const metadata: Metadata = {
   description:
     'Tailor-made safaris in the Serengeti, Ngorongoro, Tarangire, Ruaha, Kilimanjaro and Zanzibar, planned by Tanzanian safari experts.',
   icons: { icon: '/favicon.png' },
-}
+  openGraph: { type: 'website', siteName: 'All in Tanzania' },
+  // The test site must never compete with the live one in search results.
+  ...(indexable() ? {} : { robots: { index: false, follow: false } }),
+})
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const expert = await getPublicExpert()
+  const [expert, site] = await Promise.all([getPublicExpert(), getSiteSettings()])
+  const organization = {
+    '@context': 'https://schema.org',
+    '@type': 'TravelAgency',
+    name: site.companyName || 'All in Tanzania',
+    url: siteUrl(),
+    logo: `${siteUrl()}/favicon.png`,
+    email: site.email || undefined,
+    telephone: site.phone || undefined,
+    address: site.address || undefined,
+    areaServed: ['Norway', 'Sweden', 'Denmark', 'Tanzania'],
+    sameAs: (site.social ?? []).map((s) => s.url),
+  }
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable}`}>
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organization)} />
         <Header />
         <main>{children}</main>
         <Footer />

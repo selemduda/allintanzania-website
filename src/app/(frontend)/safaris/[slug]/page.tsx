@@ -8,6 +8,7 @@ import { Img } from '@/components/Img'
 import { rel, usd } from '@/lib/format'
 import { findBySlug, getShowPrices } from '@/lib/payload'
 import type { Destination, Lodge } from '@/payload-types'
+import { jsonLd, pageMeta, shareImage, siteUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,7 +16,7 @@ type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = await findBySlug('itineraries', (await params).slug)
-  return s ? { title: s.title, description: s.summary } : {}
+  return s ? pageMeta({ path: `/safaris/${s.slug}`, title: s.title, description: s.summary, image: s.heroImage }) : {}
 }
 
 export default async function SafariPage({ params }: Props) {
@@ -26,9 +27,28 @@ export default async function SafariPage({ params }: Props) {
     .filter((day) => rel<Destination>(day.destination) && (day.nights ?? 0) > 0)
     .map((day) => `${rel<Destination>(day.destination)!.slug}:${day.nights}`)
     .join(',')
+  const trip = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristTrip',
+    name: s.title,
+    description: s.summary,
+    url: `${siteUrl()}/safaris/${s.slug}`,
+    image: shareImage(s.heroImage),
+    touristType: 'Safari',
+    provider: { '@type': 'TravelAgency', name: 'All in Tanzania', url: siteUrl() },
+    itinerary: {
+      '@type': 'ItemList',
+      itemListElement: (s.days ?? []).map((day, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: { '@type': 'TouristAttraction', name: rel<Destination>(day.destination)?.name ?? day.title },
+      })),
+    },
+  }
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(trip)} />
       <section className="hero hero-short">
         <div className="hero-media">
           <Img media={s.heroImage} size="hero" priority />

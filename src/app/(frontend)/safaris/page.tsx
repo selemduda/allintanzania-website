@@ -5,9 +5,14 @@ import React from 'react'
 import { SafariCard } from '@/components/Cards'
 import { TRIP_STYLES } from '@/collections/Itineraries'
 import { getPayloadClient } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Safaris' }
+export const metadata: Metadata = pageMeta({
+  path: '/safaris',
+  title: 'Safaris',
+  description: 'Tailor-made Tanzania safari itineraries: the Great Migration, family safaris, beach and bush, and southern parks.',
+})
 
 export default async function SafarisPage({ searchParams }: { searchParams: Promise<{ style?: string }> }) {
   const { style = '' } = await searchParams

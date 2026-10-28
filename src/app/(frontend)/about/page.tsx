@@ -4,9 +4,14 @@ import Link from 'next/link'
 import React from 'react'
 
 import { getPayloadClient } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'About us' }
+export const metadata: Metadata = pageMeta({
+  path: '/about',
+  title: 'About us',
+  description: 'A Tanzanian–Norwegian safari company with offices in Tanzania and Tønsberg, Norway.',
+})
 
 export default async function AboutPage() {
   const payload = await getPayloadClient()

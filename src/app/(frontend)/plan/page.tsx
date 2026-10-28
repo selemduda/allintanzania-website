@@ -4,12 +4,14 @@ import React from 'react'
 import { TripBuilder, type BuilderDestination } from '@/components/TripBuilder'
 import { mediaPath } from '@/lib/format'
 import { getPayloadClient, getShowPrices } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: '/plan',
   title: 'Build your dream safari',
   description: 'Choose your parks, nights and style of lodge, and our experts send you a tailor-made quote.',
-}
+})
 
 type Props = { searchParams: Promise<{ add?: string; route?: string; tier?: string }> }
 

@@ -5,9 +5,14 @@ import React from 'react'
 import { LodgeCard } from '@/components/Cards'
 import { TIERS } from '@/collections/Lodges'
 import { getPayloadClient } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Lodges & Camps' }
+export const metadata: Metadata = pageMeta({
+  path: '/lodges',
+  title: 'Lodges & Camps',
+  description: 'Hand-picked safari lodges and tented camps across Tanzania, from simple and authentic to luxury.',
+})
 
 export default async function LodgesPage({ searchParams }: { searchParams: Promise<{ tier?: string }> }) {
   const { tier = '' } = await searchParams

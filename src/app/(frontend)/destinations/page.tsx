@@ -4,9 +4,14 @@ import React from 'react'
 
 import { DestinationTile } from '@/components/Cards'
 import { getPayloadClient } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Destinations' }
+export const metadata: Metadata = pageMeta({
+  path: '/destinations',
+  title: 'Destinations',
+  description: 'Serengeti, Ngorongoro, Tarangire, Ruaha, Nyerere (Selous), Kilimanjaro and Zanzibar: where to go on safari in Tanzania.',
+})
 
 const REGIONS = [
   { value: '', label: 'All' },

@@ -4,9 +4,14 @@ import React from 'react'
 
 import { Img } from '@/components/Img'
 import { getPayloadClient } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Journal' }
+export const metadata: Metadata = pageMeta({
+  path: '/journal',
+  title: 'Journal',
+  description: 'Safari stories, park guides and travel tips from our team in Tanzania.',
+})
 
 export default async function JournalPage() {
   const payload = await getPayloadClient()

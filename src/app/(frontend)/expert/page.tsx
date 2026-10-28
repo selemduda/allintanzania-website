@@ -4,15 +4,17 @@ import React from 'react'
 
 import { ExpertChat } from '@/components/ExpertChat'
 import { getPublicExpert } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(): Promise<Metadata> {
   const expert = await getPublicExpert()
-  return {
+  return pageMeta({
+    path: '/expert',
     title: `Talk to ${expert.name}, our safari expert`,
     description: 'Ask our AI safari expert about parks, seasons, lodges and family trips, by typing or by talking.',
-  }
+  })
 }
 
 type Props = { searchParams: Promise<{ about?: string }> }
