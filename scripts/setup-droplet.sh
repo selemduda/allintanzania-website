@@ -11,7 +11,10 @@ if [ -f .env ]; then
 fi
 
 ip=$(curl -fsS https://api.ipify.org || hostname -I | awk '{print $1}')
-domain="${ip//./-}.sslip.io"
+echo "Droplet IP: $ip"
+echo "If you made a (sub)domain for this site, its DNS A record must already point to $ip."
+read -rp "Domain, e.g. allintanzania.seltechtz.com (press Enter to use a free sslip.io address): " domain
+domain="${domain:-${ip//./-}.sslip.io}"
 
 echo "Your test address will be: https://$domain"
 read -rp "Admin email (for the first admin login): " admin_email
