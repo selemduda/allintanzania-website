@@ -9,7 +9,11 @@ import type { ExpertChat } from '@/payload-types'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
 
-const client = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null
+// Keys that aren't tied to a workspace need the workspace named on every request.
+const workspace = process.env.ANTHROPIC_WORKSPACE_ID
+const client = process.env.ANTHROPIC_API_KEY
+  ? new Anthropic(workspace ? { defaultHeaders: { 'anthropic-workspace-id': workspace } } : {})
+  : null
 
 async function findChat(token: unknown) {
   if (typeof token !== 'string' || !/^[0-9a-f-]{36}$/.test(token)) return null

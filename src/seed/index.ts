@@ -2,6 +2,7 @@
  * Loads starter content. Safe to re-run: it only creates what is missing.
  *   npm run seed
  * Set SEED_ADMIN_EMAIL to also create a first admin account (a random password is printed).
+ * Add RESET_ADMIN_PASSWORD=1 to give that account a new random password instead.
  */
 import config from '@payload-config'
 import crypto from 'crypto'
@@ -242,6 +243,19 @@ async function run() {
 
   if (process.env.SEED_ADMIN_EMAIL) {
     const users = await payload.count({ collection: 'users' })
+    if (users.totalDocs && process.env.RESET_ADMIN_PASSWORD) {
+      const password = crypto.randomBytes(9).toString('base64url')
+      const { docs } = await payload.update({
+        collection: 'users',
+        where: { email: { equals: process.env.SEED_ADMIN_EMAIL } },
+        data: { password, loginAttempts: 0, lockUntil: null },
+      })
+      payload.logger.info(
+        docs.length
+          ? `New password for ${process.env.SEED_ADMIN_EMAIL}: ${password} (change it after logging in)`
+          : `No user with the email ${process.env.SEED_ADMIN_EMAIL}`,
+      )
+    }
     if (!users.totalDocs) {
       const password = crypto.randomBytes(9).toString('base64url')
       await payload.create({
