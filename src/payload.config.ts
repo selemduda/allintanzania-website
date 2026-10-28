@@ -1,42 +1,90 @@
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { mcpPlugin } from '@payloadcms/plugin-mcp'
+import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { sharpTransformer } from '@payloadcms/transformer-sharp'
 import path from 'path'
 import { buildConfig } from 'payload'
+import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
-import { Users } from './collections/Users'
+import { Destinations } from './collections/Destinations'
+import { Enquiries } from './collections/Enquiries'
+import { Itineraries } from './collections/Itineraries'
+import { Lodges } from './collections/Lodges'
 import { Media } from './collections/Media'
-import { Folders } from './collections/Folders'
-import { Tags } from './collections/Tags'
+import { Posts } from './collections/Posts'
+import { PriceLists } from './collections/PriceLists'
+import { Users } from './collections/Users'
+import { migrations } from './migrations'
+import { ExpertSettings } from './globals/ExpertSettings'
+import { HomePage } from './globals/HomePage'
+import { PricingSettings } from './globals/PricingSettings'
+import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: ' · All in Tanzania',
+      icons: [{ rel: 'icon', type: 'image/png', url: '/favicon.png' }],
+    },
   },
-  collections: [Users, Media, Folders, Tags],
+  collections: [
+    Destinations,
+    Lodges,
+    Itineraries,
+    Posts,
+    Media,
+    Enquiries,
+    PriceLists,
+    Users,
+  ],
+  globals: [HomePage, SiteSettings, PricingSettings, ExpertSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: mongooseAdapter({
-    url: process.env.DATABASE_URL || '',
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL || '',
+    },
+    // In development the schema is pushed automatically; production applies these on start-up.
+    prodMigrations: migrations,
   }),
-  localization: {
-    locales: [{ code: 'en', label: 'English' }],
-    fallback: true,
-    defaultLocale: 'en',
-  },
-  plugins: [mcpPlugin({})],
-  upload: {
-    transformers: [sharpTransformer()],
-  },
+  sharp,
+  email: process.env.SMTP_HOST
+    ? nodemailerAdapter({
+        defaultFromAddress: process.env.SMTP_FROM || 'website@allintanzania.com',
+        defaultFromName: 'All in Tanzania website',
+        transportOptions: {
+          host: process.env.SMTP_HOST,
+          port: Number(process.env.SMTP_PORT || 587),
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+        },
+      })
+    : undefined,
+  plugins: [
+    // Photos go to DigitalOcean Spaces in production; local disk when not configured.
+    s3Storage({
+      enabled: Boolean(process.env.S3_BUCKET),
+      collections: { media: true },
+      bucket: process.env.S3_BUCKET || '',
+      config: {
+        endpoint: process.env.S3_ENDPOINT,
+        region: process.env.S3_REGION || 'fra1',
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+        },
+      },
+    }),
+  ],
 })

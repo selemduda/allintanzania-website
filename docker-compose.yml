@@ -1,43 +1,67 @@
-version: '3'
-
+# Runs the whole site on one DigitalOcean Droplet:
+#   docker compose up -d --build            start database, website and HTTPS
+#   docker compose run --rm seed            load the starter content (first time only)
 services:
-  payload:
-    image: node:24.22.1-alpine
-    ports:
-      - '3000:3000'
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: allintanzania
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: allintanzania
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U allintanzania']
+      interval: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      target: runner
+    restart: always
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://allintanzania:${POSTGRES_PASSWORD}@db:5432/allintanzania
+    volumes:
+      - media:/app/media
+      - private:/app/private
     depends_on:
-      - mongo
-      # - postgres
-    env_file:
-      - .env
+      db:
+        condition: service_healthy
 
-  # Ensure your DATABASE_URL uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
+  seed:
+    profiles: ['tools']
+    build:
+      context: .
+      target: builder
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://allintanzania:${POSTGRES_PASSWORD}@db:5432/allintanzania
     volumes:
-      - data:/data/db
-    logging:
-      driver: none
+      - media:/app/media
+      - private:/app/private
+    command: npm run seed
+    depends_on:
+      db:
+        condition: service_healthy
 
-  # Uncomment the following to use postgres
-  # postgres:
-  #   restart: always
-  #   image: postgres:latest
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    command: caddy reverse-proxy --from ${SITE_DOMAIN:?set SITE_DOMAIN in .env} --to app:3000
+    volumes:
+      - caddy:/data
+    depends_on:
+      - app
 
 volumes:
-  data:
-  # pgdata:
-  node_modules:
+  pgdata:
+  media:
+  private:
+  caddy:

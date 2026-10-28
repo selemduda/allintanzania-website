@@ -1,0 +1,43 @@
+serengeti-plains.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Serengeti.jpg
+leopard-in-tree.jpg <- Dropbox: Safari Pictures 2021/IMG_0299.JPG
+dhow-sunset-zanzibar.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Zanzibar/Beautiful Zanzibar-5.jpg
+migration-game-drive.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Dec 2019/Ubuntu-Wildebeest-migration-game-drive-4.jpg
+kilimanjaro-sunrise.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Sunrise on Kilimanjaro.jpg
+maasai-warriors.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Maasai Worriors-2.jpg
+all-in-tanzania-safari-vehicle.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/family safari.jpg
+bush-picnic.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Serengeti Safari.jpg
+family-safari-breakfast.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Family Safari.jpg
+kids-archery-maasai.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Kids Safari Pictures/kids-learning-on-safari.jpg
+kids-bush-walk.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Family Safari-3.jpg
+sundowner-plains.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Family Safari-2 - Copy.jpg
+mara-river-crossing.jpg <- Dropbox: Safari Pictures 2021/IMG_0766.JPG
+zebra-and-wildebeest.jpg <- Dropbox: Safari Pictures 2021/IMG_2695.JPG
+lion-in-grass.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Asilia-Adventures-Basecamp-Lion.jpg
+leopard-yawning.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Leopard John.jpg
+zebra-portrait.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Zebra of Serengeti.jpg
+tree-climbing-lions-manyara.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Lions in the tree.jpg
+lake-manyara-flamingos.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/lake Manyara flamingos.jpg
+giraffes-manyara.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/lake Manyara.jpg
+manyara-forest-road.jpg <- Dropbox: Safari Pictures 2021/IMG_2307.JPG
+selous-river-sunset.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Selous Sunset at Kinga Lodge.jpg
+selous-buffalo.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Selous Bufallo.jpg
+giraffe-portrait.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Giraffe in Selous.jpg
+ruaha-lodge-pool.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/ruaha.jpg
+ruaha-lodge-lounge.jpg <- Dropbox: Safari Pictures 2021/IMG_2210.JPG
+ruaha-lodge-view.jpg <- Dropbox: Safari Pictures 2021/IMG_2211.JPG
+uhuru-peak-summit.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Uhuru Peak.jpg
+kilimanjaro-climber.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Babu in Kilimanjaro.jpg
+zanzibar-beach-palms.jpg <- Dropbox: Safari Pictures 2021/IMG_2717.JPG
+zanzibar-door.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Zanzibar/Beautiful Zanzibar-3.jpg
+zanzibar-turquoise.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Zanzibar.jpg
+mafia-butiama-sunrise.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Butiama Pictures Mafia Island/Butiama Beach-20.jpg
+mafia-butiama-veranda.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Butiama Pictures Mafia Island/Butiama Beach-90.jpg
+mafia-beach.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Butiama Pictures Mafia Island/Butiama Beach-50.jpg
+ngorongoro-crater-view.jpg <- Dropbox: Safari Pictures 2021/IMG_9784.JPG
+ngorongoro-crater-floor.jpg <- Dropbox: Safari Pictures 2021/IMG_9791.JPG
+elephant-tarangire.jpg <- Dropbox: Safari Pictures 2021/IMG_1515.JPG
+elephant-family.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Girls Trip Pictures/Selous Elephant.jpg
+cheetahs-resting.jpg <- Dropbox: Safari Pictures 2021/IMG_5549.JPG
+golf-safari-arusha.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Golf Safari.jpg
+riverbed-dinner.jpg <- Dropbox: Safari Pictures 2021/IMG_6248.JPG
+lion-in-tree.jpg <- Dropbox: Safari Pictures 2021/IMG_2625.JPG
