@@ -6,9 +6,9 @@ The whole site runs on one Droplet with Docker: Postgres, the website, and Caddy
 
 In DigitalOcean, create a Droplet:
 
-- **Image**: Marketplace → *Docker on Ubuntu*
+- **Image**: *Ubuntu 24.04 (LTS)* (the setup script installs Docker), or *Docker* from the Solutions/Marketplace tab
 - **Size**: Basic, 2 vCPU / 4 GB RAM (building the site needs about 4 GB)
-- **Region**: Frankfurt or Amsterdam (close to Norway and East Africa)
+- **Region**: London, Frankfurt or Amsterdam (close to Norway and East Africa)
 - **Authentication**: your SSH key
 
 Note the Droplet's IP address, for example `164.90.1.2`. Your test address is then `164-90-1-2.sslip.io`. sslip.io turns the IP into a hostname that HTTPS certificates can be issued for.

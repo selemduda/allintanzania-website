@@ -5,6 +5,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Plain Ubuntu Droplets don't have Docker yet; install it once.
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Installing Docker..."
+  curl -fsSL https://get.docker.com | sh
+fi
+
 if [ -f .env ]; then
   echo ".env already exists. To change a setting, edit it with: nano .env"
   exit 1
