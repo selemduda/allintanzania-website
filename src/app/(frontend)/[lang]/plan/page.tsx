@@ -3,19 +3,26 @@ import React from 'react'
 
 import { TripBuilder, type BuilderDestination } from '@/components/TripBuilder'
 import { mediaPath } from '@/lib/format'
+import { getDict } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { getPayloadClient, getShowPrices } from '@/lib/payload'
 import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = pageMeta({
-  path: '/plan',
-  title: 'Build your dream safari',
-  description: 'Choose your parks, nights and style of lodge, and our experts send you a tailor-made quote.',
-})
+type Props = {
+  params: Promise<{ lang: string }>
+  searchParams: Promise<{ add?: string; route?: string; tier?: string }>
+}
 
-type Props = { searchParams: Promise<{ add?: string; route?: string; tier?: string }> }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const lang = await pageLang(params)
+  const t = getDict(lang).plan
+  return pageMeta({ lang, path: '/plan', title: t.title, description: t.description })
+}
 
-export default async function PlanPage({ searchParams }: Props) {
+export default async function PlanPage({ params: routeParams, searchParams }: Props) {
+  const lang = await pageLang(routeParams)
+  const t = getDict(lang)
   const params = await searchParams
   const payload = await getPayloadClient()
   const showPrices = await getShowPrices()
@@ -25,6 +32,7 @@ export default async function PlanPage({ searchParams }: Props) {
     sort: 'order',
     limit: 100,
     depth: 1,
+    locale: lang,
   })
   const destinations: BuilderDestination[] = docs.map((d) => ({
     slug: d.slug ?? String(d.id),
@@ -53,11 +61,9 @@ export default async function PlanPage({ searchParams }: Props) {
   return (
     <>
       <section className="container page-intro">
-        <span className="eyebrow">Trip builder</span>
-        <h1>Build your dream safari</h1>
-        <p className="lead">
-          Pick the places you want to see, how long to stay and how you like to sleep. {showPrices ? 'Your estimate updates as you go, then one' : 'One'} of our experts then turns it into a real itinerary{showPrices ? '' : ' with a personal quote'}.
-        </p>
+        <span className="eyebrow">{t.plan.eyebrow}</span>
+        <h1>{t.plan.title}</h1>
+        <p className="lead">{t.plan.lead(showPrices)}</p>
       </section>
       <section className="container" style={{ paddingBottom: 110 }}>
         <TripBuilder
@@ -65,6 +71,7 @@ export default async function PlanPage({ searchParams }: Props) {
           initialStops={initialStops}
           initialTier={tier as 'comfort' | 'classic' | 'luxury'}
           showPrices={showPrices}
+          lang={lang}
         />
       </section>
     </>

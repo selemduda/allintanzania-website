@@ -3,24 +3,28 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
-import { TIER_LABEL } from '@/components/Cards'
 import { Img } from '@/components/Img'
 import { rel, usd } from '@/lib/format'
+import { getDict, localePath } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { findBySlug, getShowPrices } from '@/lib/payload'
 import type { Destination, Lodge } from '@/payload-types'
 import { jsonLd, pageMeta, shareImage, siteUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = { params: Promise<{ lang: string; slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const s = await findBySlug('itineraries', (await params).slug)
-  return s ? pageMeta({ path: `/safaris/${s.slug}`, title: s.title, description: s.summary, image: s.heroImage }) : {}
+  const lang = await pageLang(params)
+  const s = await findBySlug('itineraries', (await params).slug, lang)
+  return s ? pageMeta({ lang, path: `/safaris/${s.slug}`, title: s.title, description: s.summary, image: s.heroImage }) : {}
 }
 
 export default async function SafariPage({ params }: Props) {
-  const s = await findBySlug('itineraries', (await params).slug)
+  const lang = await pageLang(params)
+  const t = getDict(lang)
+  const s = await findBySlug('itineraries', (await params).slug, lang)
   const showPrices = await getShowPrices()
   if (!s) notFound()
   const route = (s.days ?? [])
@@ -32,7 +36,8 @@ export default async function SafariPage({ params }: Props) {
     '@type': 'TouristTrip',
     name: s.title,
     description: s.summary,
-    url: `${siteUrl()}/safaris/${s.slug}`,
+    url: siteUrl() + localePath(lang, `/safaris/${s.slug}`),
+    inLanguage: lang === 'no' ? 'nb' : 'en',
     image: shareImage(s.heroImage),
     touristType: 'Safari',
     provider: { '@type': 'TravelAgency', name: 'All in Tanzania', url: siteUrl() },
@@ -54,7 +59,7 @@ export default async function SafariPage({ params }: Props) {
           <Img media={s.heroImage} size="hero" priority />
         </div>
         <div className="container hero-content">
-          <span className="eyebrow">{s.durationDays} day safari</span>
+          <span className="eyebrow">{t.safaris.daySafari(s.durationDays)}</span>
           <h1>{s.title}</h1>
         </div>
       </section>
@@ -63,7 +68,7 @@ export default async function SafariPage({ params }: Props) {
         <div className="container detail-grid">
           <div>
             <p className="lead">{s.summary}</p>
-            <h2 style={{ marginTop: 48 }}>Day by day</h2>
+            <h2 style={{ marginTop: 48 }}>{t.safaris.dayByDay}</h2>
             <ol className="timeline">
               {(s.days ?? []).map((day) => {
                 const dest = rel<Destination>(day.destination)
@@ -73,8 +78,8 @@ export default async function SafariPage({ params }: Props) {
                     <span className="day">{day.dayRange}</span>
                     <h3>{day.title}</h3>
                     <div className="where">
-                      {dest && <Link href={`/destinations/${dest.slug}`}>{dest.name}</Link>}
-                      {lodge && <> · <Link href={`/lodges/${lodge.slug}`}>{lodge.name}</Link></>}
+                      {dest && <Link href={localePath(lang, `/destinations/${dest.slug}`)}>{dest.name}</Link>}
+                      {lodge && <> · <Link href={localePath(lang, `/lodges/${lodge.slug}`)}>{lodge.name}</Link></>}
                     </div>
                     {day.description && <p>{day.description}</p>}
                   </li>
@@ -85,13 +90,13 @@ export default async function SafariPage({ params }: Props) {
               <div className="grid grid-2" style={{ marginTop: 24 }}>
                 {s.included && s.included.length > 0 && (
                   <div>
-                    <h3>Included</h3>
+                    <h3>{t.safaris.included}</h3>
                     <ul className="highlights">{s.included.map((x) => <li key={x}>{x}</li>)}</ul>
                   </div>
                 )}
                 {s.excluded && s.excluded.length > 0 && (
                   <div>
-                    <h3>Not included</h3>
+                    <h3>{t.safaris.notIncluded}</h3>
                     <ul className="highlights">{s.excluded.map((x) => <li key={x}>{x}</li>)}</ul>
                   </div>
                 )}
@@ -100,27 +105,27 @@ export default async function SafariPage({ params }: Props) {
           </div>
           <aside className="detail-aside">
             <dl>
-              <dt>Duration</dt>
-              <dd>{s.durationDays} days</dd>
+              <dt>{t.safaris.duration}</dt>
+              <dd>{t.days(s.durationDays)}</dd>
               {s.tier && (
                 <>
-                  <dt>Style</dt>
-                  <dd>{TIER_LABEL[s.tier]}</dd>
+                  <dt>{t.safaris.style}</dt>
+                  <dd>{t.tiers[s.tier]}</dd>
                 </>
               )}
-              <dt>{showPrices && s.fromPrice ? 'From' : 'Price'}</dt>
+              <dt>{showPrices && s.fromPrice ? t.safaris.from : t.safaris.price}</dt>
               {showPrices && s.fromPrice ? (
                 <dd style={{ fontSize: '1.6rem', fontFamily: 'var(--serif)' }}>
-                  {usd(s.fromPrice)} <small className="muted">per person</small>
+                  {usd(s.fromPrice)} <small className="muted">{t.safaris.perPerson}</small>
                 </dd>
               ) : (
-                <dd>On request</dd>
+                <dd>{t.safaris.onRequest}</dd>
               )}
             </dl>
-            <Link href={`/plan?route=${route}&tier=${s.tier ?? 'classic'}`} className="btn btn-primary">
-              {showPrices ? 'Customise & price this trip' : 'Customise this trip'}
+            <Link href={localePath(lang, `/plan?route=${route}&tier=${s.tier ?? 'classic'}`)} className="btn btn-primary">
+              {showPrices ? t.safaris.customisePrice : t.safaris.customise}
             </Link>
-            <Link href={`/expert?about=${encodeURIComponent(s.title)}`} className="btn btn-ghost">Ask our expert</Link>
+            <Link href={localePath(lang, `/expert?about=${encodeURIComponent(s.title)}`)} className="btn btn-ghost">{t.askExpert}</Link>
           </aside>
         </div>
       </section>

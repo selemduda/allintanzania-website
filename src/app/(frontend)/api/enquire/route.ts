@@ -48,6 +48,7 @@ export async function POST(req: Request) {
       estimate,
       estimateTotal: estimate?.total,
       source,
+      language: body.language === 'no' ? 'no' : 'en',
     },
   })
   await notifyTeam(payload, doc).catch((err) => payload.logger.error({ err }, 'Enquiry email failed'))

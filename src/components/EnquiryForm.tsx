@@ -2,13 +2,17 @@
 
 import React, { useState } from 'react'
 
+import { getDict, type Lang } from '@/lib/i18n'
+
 type Props = {
   source: 'contact' | 'builder' | 'ai'
   trip?: unknown
   compact?: boolean
+  lang: Lang
 }
 
-export function EnquiryForm({ source, trip, compact }: Props) {
+export function EnquiryForm({ source, trip, compact, lang }: Props) {
+  const t = getDict(lang).form
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [error, setError] = useState('')
 
@@ -20,10 +24,10 @@ export function EnquiryForm({ source, trip, compact }: Props) {
       const res = await fetch('/api/enquire', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, source, trip }),
+        body: JSON.stringify({ ...data, source, trip, language: lang }),
       })
       const json = await res.json()
-      if (!res.ok) throw new Error(json.error || 'Something went wrong')
+      if (!res.ok) throw new Error(json.error || t.error)
       setState('sent')
     } catch (err) {
       setError((err as Error).message)
@@ -33,9 +37,7 @@ export function EnquiryForm({ source, trip, compact }: Props) {
 
   if (state === 'sent') {
     return (
-      <p className="notice">
-        Asante sana! Your safari expert will reply within one working day, usually much sooner.
-      </p>
+      <p className="notice">{t.sent}</p>
     )
   }
 
@@ -43,20 +45,20 @@ export function EnquiryForm({ source, trip, compact }: Props) {
     <form className="form" onSubmit={onSubmit}>
       <div className={compact ? 'form' : 'form-row'}>
         <div className="field">
-          <label htmlFor="enq-name">Your name</label>
+          <label htmlFor="enq-name">{t.name}</label>
           <input id="enq-name" name="name" required autoComplete="name" />
         </div>
         <div className="field">
-          <label htmlFor="enq-email">Email</label>
+          <label htmlFor="enq-email">{t.email}</label>
           <input id="enq-email" name="email" type="email" required autoComplete="email" />
         </div>
         <div className="field">
-          <label htmlFor="enq-phone">Phone or WhatsApp</label>
+          <label htmlFor="enq-phone">{t.phone}</label>
           <input id="enq-phone" name="phone" autoComplete="tel" />
         </div>
         {!compact && (
           <div className="field">
-            <label htmlFor="enq-country">Country</label>
+            <label htmlFor="enq-country">{t.country}</label>
             <input id="enq-country" name="country" autoComplete="country-name" />
           </div>
         )}
@@ -64,27 +66,27 @@ export function EnquiryForm({ source, trip, compact }: Props) {
       {!trip && (
         <div className="form-row">
           <div className="field">
-            <label htmlFor="enq-month">When would you like to travel?</label>
-            <input id="enq-month" name="travelMonth" placeholder="e.g. July 2027" />
+            <label htmlFor="enq-month">{t.when}</label>
+            <input id="enq-month" name="travelMonth" placeholder={t.whenPlaceholder} />
           </div>
           <div className="field">
-            <label htmlFor="enq-adults">Adults</label>
+            <label htmlFor="enq-adults">{t.adults}</label>
             <input id="enq-adults" name="adults" type="number" min={1} defaultValue={2} />
           </div>
           <div className="field">
-            <label htmlFor="enq-children">Children</label>
+            <label htmlFor="enq-children">{t.children}</label>
             <input id="enq-children" name="children" type="number" min={0} defaultValue={0} />
           </div>
         </div>
       )}
       <div className="field">
-        <label htmlFor="enq-message">{trip ? 'Anything else we should know?' : 'Tell us about your dream safari'}</label>
+        <label htmlFor="enq-message">{trip ? t.anythingElse : t.tellUs}</label>
         <textarea id="enq-message" name="message" rows={compact ? 3 : 6} />
       </div>
       <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hp" aria-hidden />
       {state === 'error' && <p className="notice notice-error">{error}</p>}
       <button className="btn btn-primary" disabled={state === 'sending'}>
-        {state === 'sending' ? 'Sending…' : 'Send enquiry'}
+        {state === 'sending' ? t.sending : t.send}
       </button>
     </form>
   )

@@ -14,13 +14,13 @@ export const ExpertSettings: GlobalConfig = {
       type: 'row',
       fields: [
         { name: 'expertName', type: 'text', defaultValue: 'Baraka' },
-        { name: 'expertTitle', type: 'text', defaultValue: 'Safari Expert, Arusha' },
+        { name: 'expertTitle', type: 'text', localized: true, defaultValue: 'Safari Expert, Arusha' },
       ],
     },
     { name: 'avatar', type: 'upload', relationTo: 'media' },
     {
       name: 'greeting',
-      type: 'textarea',
+      type: 'textarea', localized: true,
       defaultValue:
         "Karibu! I'm Baraka, the All in Tanzania AI safari expert. I've learned from our guides and planners, so ask me anything about parks, seasons, lodges or family trips, by typing or by talking. Tell me what you dream of seeing and we'll shape your safari together.",
     },

@@ -3,18 +3,19 @@ import { cache } from 'react'
 import { getPayload } from 'payload'
 
 import { mediaPath } from './format'
+import type { Lang } from './i18n'
 
 export const getPayloadClient = cache(async () => getPayload({ config }))
 
-export const getSiteSettings = cache(async () => {
+export const getSiteSettings = cache(async (locale: Lang = 'en') => {
   const payload = await getPayloadClient()
-  return payload.findGlobal({ slug: 'site-settings', depth: 1 })
+  return payload.findGlobal({ slug: 'site-settings', depth: 1, locale })
 })
 
 /** Public-safe view of the AI expert: never send the personality or facts to the browser. */
-export const getPublicExpert = cache(async () => {
+export const getPublicExpert = cache(async (locale: Lang = 'en') => {
   const payload = await getPayloadClient()
-  const expert = await payload.findGlobal({ slug: 'expert-settings', depth: 1, overrideAccess: true })
+  const expert = await payload.findGlobal({ slug: 'expert-settings', depth: 1, overrideAccess: true, locale })
   return {
     enabled: expert.enabled !== false,
     name: expert.expertName || 'Baraka',
@@ -37,12 +38,14 @@ export type PublicExpert = Awaited<ReturnType<typeof getPublicExpert>>
 export async function findBySlug<T extends 'destinations' | 'lodges' | 'itineraries' | 'posts'>(
   collection: T,
   slug: string,
+  locale: Lang = 'en',
   depth = 2,
 ) {
   const payload = await getPayloadClient()
   const { docs } = await payload.find({
     collection,
     where: { slug: { equals: slug }, _status: { equals: 'published' } },
+    locale,
     depth,
     limit: 1,
   })

@@ -8,7 +8,7 @@ export const SiteSettings: GlobalConfig = {
   access: { read: anyone, update: editors },
   fields: [
     { name: 'companyName', type: 'text', defaultValue: 'All in Tanzania' },
-    { name: 'tagline', type: 'text', defaultValue: 'Your choice. Your holiday. Our mission.' },
+    { name: 'tagline', type: 'text', localized: true, defaultValue: 'Your choice. Your holiday. Our mission.' },
     {
       type: 'row',
       fields: [
@@ -45,6 +45,6 @@ export const SiteSettings: GlobalConfig = {
       hasMany: true,
       admin: { description: 'Who gets an email when a visitor sends an enquiry.' },
     },
-    { name: 'footerNote', type: 'textarea' },
+    { name: 'footerNote', type: 'textarea', localized: true },
   ],
 }

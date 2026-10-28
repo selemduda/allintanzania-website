@@ -7,20 +7,25 @@ import { LodgeCard, SafariCard } from '@/components/Cards'
 import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
 import { MONTHS } from '@/collections/Destinations'
+import { getDict, localePath } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { findBySlug, getPayloadClient } from '@/lib/payload'
 import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = { params: Promise<{ lang: string; slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const d = await findBySlug('destinations', (await params).slug)
-  return d ? pageMeta({ path: `/destinations/${d.slug}`, title: d.name, description: d.summary, image: d.heroImage }) : {}
+  const lang = await pageLang(params)
+  const d = await findBySlug('destinations', (await params).slug, lang)
+  return d ? pageMeta({ lang, path: `/destinations/${d.slug}`, title: d.name, description: d.summary, image: d.heroImage }) : {}
 }
 
 export default async function DestinationPage({ params }: Props) {
-  const d = await findBySlug('destinations', (await params).slug)
+  const lang = await pageLang(params)
+  const t = getDict(lang)
+  const d = await findBySlug('destinations', (await params).slug, lang)
   if (!d) notFound()
   const payload = await getPayloadClient()
   const [lodges, safaris] = await Promise.all([
@@ -28,11 +33,13 @@ export default async function DestinationPage({ params }: Props) {
       collection: 'lodges',
       where: { destination: { equals: d.id }, _status: { equals: 'published' } },
       limit: 6,
+      locale: lang,
     }),
     payload.find({
       collection: 'itineraries',
       where: { 'days.destination': { equals: d.id }, _status: { equals: 'published' } },
       limit: 3,
+      locale: lang,
     }),
   ])
 
@@ -43,7 +50,7 @@ export default async function DestinationPage({ params }: Props) {
           <Img media={d.heroImage} size="hero" priority />
         </div>
         <div className="container hero-content">
-          <span className="eyebrow">Destination</span>
+          <span className="eyebrow">{t.destinations.eyebrow}</span>
           <h1>{d.name}</h1>
           {d.tagline && <p className="lead">{d.tagline}</p>}
         </div>
@@ -55,7 +62,7 @@ export default async function DestinationPage({ params }: Props) {
             <p className="lead">{d.summary}</p>
             {d.highlights && d.highlights.length > 0 && (
               <>
-                <h3>Highlights</h3>
+                <h3>{t.destinations.highlights}</h3>
                 <ul className="highlights">
                   {d.highlights.map((h) => <li key={h.id}>{h.text}</li>)}
                 </ul>
@@ -76,31 +83,31 @@ export default async function DestinationPage({ params }: Props) {
             <dl>
               {d.wildlife && d.wildlife.length > 0 && (
                 <>
-                  <dt>Wildlife</dt>
+                  <dt>{t.destinations.wildlife}</dt>
                   <dd>{d.wildlife.join(', ')}</dd>
                 </>
               )}
               {d.recommendedNights ? (
                 <>
-                  <dt>Suggested stay</dt>
-                  <dd>{d.recommendedNights} nights</dd>
+                  <dt>{t.destinations.suggestedStay}</dt>
+                  <dd>{t.nights(d.recommendedNights)}</dd>
                 </>
               ) : null}
               {d.bestMonths && d.bestMonths.length > 0 && (
                 <>
-                  <dt>Best time to visit</dt>
+                  <dt>{t.destinations.bestTime}</dt>
                   <dd>
                     <div className="months">
-                      {MONTHS.map((m) => (
-                        <span key={m} className={d.bestMonths?.includes(m) ? 'on' : ''}>{m[0]}</span>
+                      {MONTHS.map((m, i) => (
+                        <span key={m} className={d.bestMonths?.includes(m) ? 'on' : ''} title={t.months[i]}>{m[0]}</span>
                       ))}
                     </div>
                   </dd>
                 </>
               )}
             </dl>
-            <Link href={`/plan?add=${d.slug}`} className="btn btn-primary">Add to my dream trip</Link>
-            <Link href={`/expert?about=${encodeURIComponent(d.name)}`} className="btn btn-ghost">Ask our expert</Link>
+            <Link href={localePath(lang, `/plan?add=${d.slug}`)} className="btn btn-primary">{t.addToTrip}</Link>
+            <Link href={localePath(lang, `/expert?about=${encodeURIComponent(d.name)}`)} className="btn btn-ghost">{t.askExpert}</Link>
           </aside>
         </div>
       </section>
@@ -109,10 +116,10 @@ export default async function DestinationPage({ params }: Props) {
         <section className="section section-sand">
           <div className="container">
             <div className="section-head">
-              <h2>Where to stay in {d.name}</h2>
+              <h2>{t.destinations.whereToStay(d.name)}</h2>
             </div>
             <div className="grid grid-3">
-              {lodges.docs.map((l) => <LodgeCard key={l.id} l={l} />)}
+              {lodges.docs.map((l) => <LodgeCard key={l.id} l={l} lang={lang} />)}
             </div>
           </div>
         </section>
@@ -122,10 +129,10 @@ export default async function DestinationPage({ params }: Props) {
         <section className="section">
           <div className="container">
             <div className="section-head">
-              <h2>Safaris that visit {d.name}</h2>
+              <h2>{t.destinations.safarisVisiting(d.name)}</h2>
             </div>
             <div className="grid grid-3">
-              {safaris.docs.map((s) => <SafariCard key={s.id} s={s} />)}
+              {safaris.docs.map((s) => <SafariCard key={s.id} s={s} lang={lang} />)}
             </div>
           </div>
         </section>

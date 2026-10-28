@@ -106,7 +106,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'no') | ('en' | 'no')[];
   globals: {
     'home-page': HomePage;
     'site-settings': SiteSetting;
@@ -119,7 +119,7 @@ export interface Config {
     'pricing-settings': PricingSettingsSelect<false> | PricingSettingsSelect<true>;
     'expert-settings': ExpertSettingsSelect<false> | ExpertSettingsSelect<true>;
   };
-  locale: null;
+  locale: 'en' | 'no';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -466,6 +466,10 @@ export interface Enquiry {
     | boolean
     | null;
   source?: ('contact' | 'builder' | 'ai') | null;
+  /**
+   * The website language the visitor used: reply in it.
+   */
+  language?: ('en' | 'no') | null;
   status?: ('new' | 'contacted' | 'quoted' | 'booked' | 'lost') | null;
   assignedTo?: (number | null) | User;
   internalNotes?: string | null;
@@ -872,6 +876,7 @@ export interface EnquiriesSelect<T extends boolean = true> {
   estimate?: T;
   chatTranscript?: T;
   source?: T;
+  language?: T;
   status?: T;
   assignedTo?: T;
   internalNotes?: T;

@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 
 import { EnquiryForm } from '@/components/EnquiryForm'
 import { usd } from '@/lib/format'
+import { getDict, type Lang } from '@/lib/i18n'
 
 export type BuilderDestination = {
   slug: string
@@ -32,25 +33,24 @@ type PublicEstimate = {
   disclaimer: string
 }
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const TIERS: { value: Tier; label: string; body: string }[] = [
-  { value: 'comfort', label: 'Comfort', body: 'Friendly tented camps and lodges with great locations.' },
-  { value: 'classic', label: 'Classic', body: 'Our favourite mid-range camps: comfort, character, superb guiding.' },
-  { value: 'luxury', label: 'Luxury', body: 'The finest lodges, private decks, exceptional food and service.' },
-]
+const TIERS: Tier[] = ['comfort', 'classic', 'luxury']
 
 export function TripBuilder({
   destinations,
   initialStops,
   initialTier,
   showPrices,
+  lang,
 }: {
   destinations: BuilderDestination[]
   initialStops: Stop[]
   initialTier: Tier
   /** When false the team quotes on request, so no estimate is fetched or shown. */
   showPrices: boolean
+  lang: Lang
 }) {
+  const t = getDict(lang)
+  const b = t.builder
   const [stops, setStops] = useState<Stop[]>(initialStops)
   const [month, setMonth] = useState(() => ((new Date().getMonth() + 3) % 12) + 1)
   const [adults, setAdults] = useState(2)
@@ -79,7 +79,7 @@ export function TripBuilder({
           signal: controller.signal,
         })
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'Could not calculate')
+        if (!res.ok) throw new Error(data.error || b.couldNotCalculate)
         setEstimate(data.estimate)
       } catch (err) {
         if ((err as Error).name !== 'AbortError') setError((err as Error).message)
@@ -116,7 +116,7 @@ export function TripBuilder({
     <div className="builder">
       <div className="builder-main">
         <div className="builder-step">
-          <h3><span>1</span> Where would you like to go?</h3>
+          <h3><span>1</span> {b.where}</h3>
           <div className="dest-picker">
             {destinations.map((d) => {
               const on = stops.some((s) => s.destination === d.slug)
@@ -138,21 +138,21 @@ export function TripBuilder({
 
         {stops.length > 0 && (
           <div className="builder-step">
-            <h3><span>2</span> Your route · {totalNights} nights</h3>
+            <h3><span>2</span> {b.route(totalNights)}</h3>
             <ol className="route">
               {stops.map((s, i) => (
                 <li key={s.destination}>
                   <div className="route-order">
-                    <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move earlier">↑</button>
-                    <button type="button" onClick={() => move(i, 1)} disabled={i === stops.length - 1} aria-label="Move later">↓</button>
+                    <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label={b.moveEarlier}>↑</button>
+                    <button type="button" onClick={() => move(i, 1)} disabled={i === stops.length - 1} aria-label={b.moveLater}>↓</button>
                   </div>
                   <strong>{byslug.get(s.destination)?.name}</strong>
                   <div className="stepper">
-                    <button type="button" onClick={() => setNights(i, s.nights - 1)} aria-label="One night fewer">−</button>
-                    <span>{s.nights} night{s.nights > 1 ? 's' : ''}</span>
-                    <button type="button" onClick={() => setNights(i, s.nights + 1)} aria-label="One more night">+</button>
+                    <button type="button" onClick={() => setNights(i, s.nights - 1)} aria-label={b.fewer}>−</button>
+                    <span>{t.nights(s.nights)}</span>
+                    <button type="button" onClick={() => setNights(i, s.nights + 1)} aria-label={b.more}>+</button>
                   </div>
-                  <button type="button" className="route-remove" onClick={() => toggle(s.destination)} aria-label="Remove">×</button>
+                  <button type="button" className="route-remove" onClick={() => toggle(s.destination)} aria-label={b.remove}>×</button>
                 </li>
               ))}
             </ol>
@@ -160,32 +160,32 @@ export function TripBuilder({
         )}
 
         <div className="builder-step">
-          <h3><span>{stops.length ? 3 : 2}</span> When and who?</h3>
+          <h3><span>{stops.length ? 3 : 2}</span> {b.whenWho}</h3>
           <div className="form-row">
             <div className="field">
-              <label htmlFor="month">Travel month</label>
+              <label htmlFor="month">{b.month}</label>
               <select id="month" value={month} onChange={(e) => setMonth(Number(e.target.value))}>
-                {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
+                {t.months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
               </select>
             </div>
             <div className="field">
-              <label htmlFor="adults">Adults</label>
+              <label htmlFor="adults">{b.adults}</label>
               <input id="adults" type="number" min={1} max={30} value={adults} onChange={(e) => setAdults(Math.max(1, Number(e.target.value) || 1))} />
             </div>
             <div className="field">
-              <label htmlFor="children">Children (under 16)</label>
+              <label htmlFor="children">{b.children}</label>
               <input id="children" type="number" min={0} max={20} value={children} onChange={(e) => setChildren(Math.max(0, Number(e.target.value) || 0))} />
             </div>
           </div>
         </div>
 
         <div className="builder-step">
-          <h3><span>{stops.length ? 4 : 3}</span> How would you like to stay?</h3>
+          <h3><span>{stops.length ? 4 : 3}</span> {b.stay}</h3>
           <div className="tier-picker">
-            {TIERS.map((t) => (
-              <button key={t.value} type="button" className={`tier ${tier === t.value ? 'on' : ''}`} onClick={() => setTier(t.value)} aria-pressed={tier === t.value}>
-                <strong>{t.label}</strong>
-                <small>{t.body}</small>
+            {TIERS.map((value) => (
+              <button key={value} type="button" className={`tier ${tier === value ? 'on' : ''}`} onClick={() => setTier(value)} aria-pressed={tier === value}>
+                <strong>{t.tiers[value]}</strong>
+                <small>{b.tierBodies[value]}</small>
               </button>
             ))}
           </div>
@@ -193,10 +193,10 @@ export function TripBuilder({
       </div>
 
       <aside className="builder-summary" aria-live="polite">
-        <span className="eyebrow">{showPrices ? 'Your estimate' : 'Your trip'}</span>
+        <span className="eyebrow">{showPrices ? b.yourEstimate : b.yourTrip}</span>
         {!stops.length && (
           <p className="muted">
-            {showPrices ? 'Choose at least one destination to see a price.' : 'Choose at least one destination to start.'}
+            {showPrices ? b.chooseForPrice : b.chooseToStart}
           </p>
         )}
         {!showPrices && stops.length > 0 && (
@@ -205,26 +205,21 @@ export function TripBuilder({
               {stops.map((s) => (
                 <li key={s.destination}>
                   <span>{byslug.get(s.destination)?.name ?? s.destination}</span>
-                  <span className="muted">
-                    {s.nights} night{s.nights > 1 ? 's' : ''}
-                  </span>
+                  <span className="muted">{t.nights(s.nights)}</span>
                 </li>
               ))}
             </ul>
             <p className="muted" style={{ marginBottom: 16 }}>
-              {stops.reduce((n, s) => n + s.nights, 0) + 1} days · {adults + children} traveller
-              {adults + children > 1 ? 's' : ''} · {MONTHS[month - 1]} · {TIERS.find((t) => t.value === tier)?.label}
+              {t.days(totalNights + 1)} · {t.travellers(adults + children)} · {t.months[month - 1]} · {t.tiers[tier]}
             </p>
-            <p className="estimate-total" style={{ fontSize: '1.6rem' }}>Price on request</p>
-            <p className="muted small">
-              Every safari is tailor-made. Send us your plan and one of our experts will reply with a personal quote, usually within one working day.
-            </p>
+            <p className="estimate-total" style={{ fontSize: '1.6rem' }}>{b.priceOnRequest}</p>
+            <p className="muted small">{b.tailorMade}</p>
             {!showForm ? (
               <button type="button" className="btn btn-primary" style={{ width: '100%' }} onClick={() => setShowForm(true)}>
-                Request my quote
+                {b.requestQuote}
               </button>
             ) : (
-              <EnquiryForm source="builder" trip={trip} compact />
+              <EnquiryForm source="builder" trip={trip} compact lang={lang} />
             )}
           </div>
         )}
@@ -235,11 +230,11 @@ export function TripBuilder({
               {usd(estimate.low)} – {usd(estimate.high)}
             </div>
             <p className="muted" style={{ marginBottom: 16 }}>
-              About {usd(estimate.perPerson)} per person · {estimate.days} days · {estimate.travellers} traveller
-              {estimate.travellers > 1 ? 's' : ''} · {estimate.season} season
+              {b.about} {usd(estimate.perPerson)} {b.perPerson} · {t.days(estimate.days)} · {t.travellers(estimate.travellers)} ·{' '}
+              {b.season(estimate.season)}
             </p>
             <details className="estimate-lines">
-              <summary>See what is included</summary>
+              <summary>{b.included}</summary>
               <ul>
                 {estimate.lines.map((l, i) => (
                   <li key={i}>
@@ -253,10 +248,10 @@ export function TripBuilder({
             <p className="muted small">{estimate.disclaimer}</p>
             {!showForm ? (
               <button type="button" className="btn btn-primary" style={{ width: '100%' }} onClick={() => setShowForm(true)}>
-                Send to my safari expert
+                {b.sendToExpert}
               </button>
             ) : (
-              <EnquiryForm source="builder" trip={trip} compact />
+              <EnquiryForm source="builder" trip={trip} compact lang={lang} />
             )}
           </div>
         )}

@@ -85,7 +85,10 @@ cd allintanzania-website
 git pull
 docker compose up -d --build
 docker compose --profile tools build seed
+docker compose --profile tools run --rm seed
 ```
+
+The last line is safe to repeat: it only adds starter content that is missing, such as new translations.
 
 Database changes are applied automatically when the new version starts.
 

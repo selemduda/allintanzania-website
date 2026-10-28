@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
 
+import { LANGS, localePath } from '@/lib/i18n'
 import { getPayloadClient } from '@/lib/payload'
-import { siteUrl } from '@/lib/seo'
+import { languageAlternates, siteUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,12 +16,12 @@ const SECTIONS = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteUrl()
   const payload = await getPayloadClient()
-  const pages: MetadataRoute.Sitemap = ['', '/about', '/plan', '/expert', '/contact'].map((p) => ({
-    url: base + p,
-    priority: p ? 0.6 : 1,
-  }))
+  const pages: { path: string; priority: number; lastModified?: string }[] = [
+    { path: '/', priority: 1 },
+    ...['/about', '/plan', '/expert', '/contact'].map((path) => ({ path, priority: 0.6 })),
+  ]
   for (const { collection, path } of SECTIONS) {
-    pages.push({ url: base + path, priority: 0.8 })
+    pages.push({ path, priority: 0.8 })
     const { docs } = await payload.find({
       collection,
       where: { _status: { equals: 'published' } },
@@ -28,9 +29,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       limit: 1000,
       depth: 0,
     })
-    for (const doc of docs) {
-      pages.push({ url: `${base}${path}/${doc.slug}`, lastModified: doc.updatedAt, priority: 0.7 })
-    }
+    for (const doc of docs) pages.push({ path: `${path}/${doc.slug}`, priority: 0.7, lastModified: doc.updatedAt })
   }
-  return pages
+  // Every page in every language, each listing its other language versions for search engines.
+  return pages.flatMap(({ path, priority, lastModified }) => {
+    const languages = Object.fromEntries(
+      Object.entries(languageAlternates(path)).map(([lang, href]) => [lang, base + href]),
+    )
+    return LANGS.map((lang) => ({
+      url: base + localePath(lang, path),
+      priority,
+      lastModified,
+      alternates: { languages },
+    }))
+  })
 }

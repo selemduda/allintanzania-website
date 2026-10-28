@@ -23,7 +23,7 @@ export const Destinations: CollectionConfig = {
   versions: { drafts: true },
   defaultSort: 'order',
   fields: [
-    { name: 'name', type: 'text', required: true },
+    { name: 'name', type: 'text', localized: true, required: true },
     slugField(),
     {
       type: 'row',
@@ -53,18 +53,18 @@ export const Destinations: CollectionConfig = {
         { name: 'order', type: 'number', defaultValue: 100, admin: { description: 'Lower shows first' } },
       ],
     },
-    { name: 'tagline', type: 'text', admin: { description: 'One line shown on cards, e.g. "Endless plains and the Great Migration"' } },
+    { name: 'tagline', type: 'text', localized: true, admin: { description: 'One line shown on cards, e.g. "Endless plains and the Great Migration"' } },
     { name: 'heroImage', type: 'upload', relationTo: 'media' },
-    { name: 'summary', type: 'textarea', required: true },
-    { name: 'body', type: 'richText' },
+    { name: 'summary', type: 'textarea', localized: true, required: true },
+    { name: 'body', type: 'richText', localized: true },
     {
       name: 'highlights',
       type: 'array',
-      fields: [{ name: 'text', type: 'text', required: true }],
+      fields: [{ name: 'text', type: 'text', localized: true, required: true }],
     },
     {
       name: 'wildlife',
-      type: 'text',
+      type: 'text', localized: true,
       hasMany: true,
       admin: { description: 'Animals guests are likely to see' },
     },

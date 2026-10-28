@@ -5,19 +5,17 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-const NAV = [
-  { href: '/destinations', label: 'Destinations' },
-  { href: '/safaris', label: 'Safaris' },
-  { href: '/lodges', label: 'Lodges & Camps' },
-  { href: '/journal', label: 'Journal' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-]
+import { getDict, localePath, stripLang, type Lang } from '@/lib/i18n'
+
+const NAV = ['destinations', 'safaris', 'lodges', 'journal', 'about', 'contact'] as const
 
 const HERO_PAGES = /^\/(about|(destinations|safaris|lodges|journal)\/[^/]+)?$/
 
-export function Header() {
-  const pathname = usePathname()
+export function Header({ lang }: { lang: Lang }) {
+  const t = getDict(lang)
+  const fullPath = usePathname() ?? '/'
+  // The page's address without the language prefix, e.g. '/safaris' for both /safaris and /no/safaris.
+  const pathname = stripLang(fullPath)
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [lastPath, setLastPath] = useState(pathname)
@@ -27,7 +25,7 @@ export function Header() {
     setOpen(false)
   }
   // Only pages that open with a full-bleed photo get the see-through header.
-  const overHero = HERO_PAGES.test(pathname ?? '')
+  const overHero = HERO_PAGES.test(pathname)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -40,7 +38,7 @@ export function Header() {
   return (
     <header className={`site-header ${solid ? 'is-solid' : ''} ${open ? 'is-open' : ''}`}>
       <div className="container header-inner">
-        <Link href="/" className="brand" aria-label="All in Tanzania home">
+        <Link href={localePath(lang, '/')} className="brand" aria-label={t.nav.home}>
           <Image
             src={solid ? '/brand/logo.png' : '/brand/logo-white.png'}
             alt="All in Tanzania"
@@ -50,24 +48,32 @@ export function Header() {
           />
         </Link>
         <nav className="main-nav" aria-label="Main">
-          {NAV.map((item) => (
+          {NAV.map((key) => (
             <Link
-              key={item.href}
-              href={item.href}
-              className={pathname?.startsWith(item.href) ? 'active' : undefined}
+              key={key}
+              href={localePath(lang, `/${key}`)}
+              className={pathname.startsWith(`/${key}`) ? 'active' : undefined}
             >
-              {item.label}
+              {t.nav[key]}
             </Link>
           ))}
+          <Link
+            href={localePath(lang === 'en' ? 'no' : 'en', pathname)}
+            hrefLang={lang === 'en' ? 'nb' : 'en'}
+            className="lang-switch"
+            aria-label={`${t.nav.language}: ${t.nav.otherLanguage}`}
+          >
+            {lang === 'en' ? 'NO' : 'EN'}
+          </Link>
         </nav>
         <div className="header-actions">
-          <Link href="/plan" className="btn btn-primary btn-sm">
-            Plan my safari
+          <Link href={localePath(lang, '/plan')} className="btn btn-primary btn-sm">
+            {t.nav.plan}
           </Link>
           <button
             className="menu-toggle"
             aria-expanded={open}
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
             onClick={() => setOpen((o) => !o)}
           >
             <span />

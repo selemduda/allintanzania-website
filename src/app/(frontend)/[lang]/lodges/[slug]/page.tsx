@@ -3,25 +3,29 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import React from 'react'
 
-import { TIER_LABEL } from '@/components/Cards'
 import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
 import { rel } from '@/lib/format'
+import { getDict, localePath } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { findBySlug } from '@/lib/payload'
 import type { Destination } from '@/payload-types'
 import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = { params: Promise<{ lang: string; slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const l = await findBySlug('lodges', (await params).slug)
-  return l ? pageMeta({ path: `/lodges/${l.slug}`, title: l.name, description: l.summary, image: l.heroImage }) : {}
+  const lang = await pageLang(params)
+  const l = await findBySlug('lodges', (await params).slug, lang)
+  return l ? pageMeta({ lang, path: `/lodges/${l.slug}`, title: l.name, description: l.summary, image: l.heroImage }) : {}
 }
 
 export default async function LodgePage({ params }: Props) {
-  const l = await findBySlug('lodges', (await params).slug)
+  const lang = await pageLang(params)
+  const t = getDict(lang)
+  const l = await findBySlug('lodges', (await params).slug, lang)
   if (!l) notFound()
   const dest = rel<Destination>(l.destination)
   return (
@@ -31,7 +35,7 @@ export default async function LodgePage({ params }: Props) {
           <Img media={l.heroImage} size="hero" priority />
         </div>
         <div className="container hero-content">
-          <span className="eyebrow">{TIER_LABEL[l.tier]}{dest ? ` · ${dest.name}` : ''}</span>
+          <span className="eyebrow">{t.tiers[l.tier]}{dest ? ` · ${dest.name}` : ''}</span>
           <h1>{l.name}</h1>
         </div>
       </section>
@@ -54,23 +58,23 @@ export default async function LodgePage({ params }: Props) {
             <dl>
               {dest && (
                 <>
-                  <dt>Location</dt>
-                  <dd><Link href={`/destinations/${dest.slug}`}>{dest.name}</Link></dd>
+                  <dt>{t.lodges.location}</dt>
+                  <dd><Link href={localePath(lang, `/destinations/${dest.slug}`)}>{dest.name}</Link></dd>
                 </>
               )}
-              <dt>Level</dt>
-              <dd>{TIER_LABEL[l.tier]}</dd>
+              <dt>{t.lodges.level}</dt>
+              <dd>{t.tiers[l.tier]}</dd>
               {l.amenities && l.amenities.length > 0 && (
                 <>
-                  <dt>Highlights</dt>
+                  <dt>{t.lodges.highlights}</dt>
                   <dd>{l.amenities.join(' · ')}</dd>
                 </>
               )}
             </dl>
             {dest && (
-              <Link href={`/plan?add=${dest.slug}&tier=${l.tier}`} className="btn btn-primary">Add to my dream trip</Link>
+              <Link href={localePath(lang, `/plan?add=${dest.slug}&tier=${l.tier}`)} className="btn btn-primary">{t.addToTrip}</Link>
             )}
-            <Link href={`/expert?about=${encodeURIComponent(l.name)}`} className="btn btn-ghost">Ask our expert</Link>
+            <Link href={localePath(lang, `/expert?about=${encodeURIComponent(l.name)}`)} className="btn btn-ghost">{t.askExpert}</Link>
           </aside>
         </div>
       </section>

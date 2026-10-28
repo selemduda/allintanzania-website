@@ -6,30 +6,40 @@ import { DestinationTile, SafariCard } from '@/components/Cards'
 import { HeroSlider } from '@/components/HeroSlider'
 import { Img } from '@/components/Img'
 import { rel } from '@/lib/format'
+import { getDict, localePath } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { getPayloadClient, getPublicExpert } from '@/lib/payload'
+import { pageMeta } from '@/lib/seo'
 import type { Destination, Itinerary } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata: Metadata = { alternates: { canonical: '/' } }
+type Props = { params: Promise<{ lang: string }> }
 
-export default async function HomePage() {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return pageMeta({ lang: await pageLang(params), path: '/' })
+}
+
+export default async function HomePage({ params }: Props) {
+  const lang = await pageLang(params)
+  const t = getDict(lang)
+  const href = (path: string) => localePath(lang, path)
   const payload = await getPayloadClient()
   const [home, expert] = await Promise.all([
-    payload.findGlobal({ slug: 'home-page', depth: 2 }),
-    getPublicExpert(),
+    payload.findGlobal({ slug: 'home-page', depth: 2, locale: lang }),
+    getPublicExpert(lang),
   ])
 
   let destinations = (home.featuredDestinations ?? []).map(rel).filter(Boolean) as Destination[]
   if (!destinations.length) {
     destinations = (
-      await payload.find({ collection: 'destinations', where: { _status: { equals: 'published' } }, limit: 6, sort: 'order' })
+      await payload.find({ collection: 'destinations', where: { _status: { equals: 'published' } }, limit: 6, sort: 'order', locale: lang })
     ).docs
   }
   let safaris = (home.featuredItineraries ?? []).map(rel).filter(Boolean) as Itinerary[]
   if (!safaris.length) {
     safaris = (
-      await payload.find({ collection: 'itineraries', where: { _status: { equals: 'published' } }, limit: 3 })
+      await payload.find({ collection: 'itineraries', where: { _status: { equals: 'published' } }, limit: 3, locale: lang })
     ).docs
   }
 
@@ -40,7 +50,7 @@ export default async function HomePage() {
     image: <Img media={s.image} size="hero" priority={i === 0} />,
   }))
   if (!slides.length) {
-    slides.push({ key: 'default', eyebrow: 'Tailor-made Tanzania safaris', heading: 'Where the wild still roams free', image: <Img /> })
+    slides.push({ key: 'default', eyebrow: t.home.defaultEyebrow, heading: t.home.defaultHeading, image: <Img /> })
   }
 
   return (
@@ -48,8 +58,8 @@ export default async function HomePage() {
       <HeroSlider slides={slides}>
         {home.heroSubheading && <p className="lead">{home.heroSubheading}</p>}
         <div className="hero-actions">
-          <Link href="/plan" className="btn btn-primary">Build your dream safari</Link>
-          <Link href="/expert" className="btn btn-ghost">Talk to {expert.name}</Link>
+          <Link href={href('/plan')} className="btn btn-primary">{t.buildDream}</Link>
+          <Link href={href('/expert')} className="btn btn-ghost">{t.home.talkTo(expert.name)}</Link>
         </div>
       </HeroSlider>
 
@@ -60,7 +70,7 @@ export default async function HomePage() {
               <span className="eyebrow">Karibu Tanzania</span>
               <h2>{home.intro.heading}</h2>
               {home.intro.body?.split('\n\n').map((p, i) => <p key={i} className="lead">{p}</p>)}
-              <Link href="/about" className="link-arrow">Our story</Link>
+              <Link href={href('/about')} className="link-arrow">{t.home.ourStory}</Link>
             </div>
             <div className="split-media">
               <Img media={home.intro.image} size="card" sizes="(max-width: 860px) 100vw, 50vw" />
@@ -74,13 +84,13 @@ export default async function HomePage() {
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="eyebrow">Destinations</span>
-                <h2>From crater floor to coral reef</h2>
+                <span className="eyebrow">{t.home.destinationsEyebrow}</span>
+                <h2>{t.home.destinationsHeading}</h2>
               </div>
-              <Link href="/destinations" className="link-arrow">All destinations</Link>
+              <Link href={href('/destinations')} className="link-arrow">{t.home.allDestinations}</Link>
             </div>
             <div className="grid grid-3">
-              {destinations.slice(0, 6).map((d) => <DestinationTile key={d.id} d={d} />)}
+              {destinations.slice(0, 6).map((d) => <DestinationTile key={d.id} d={d} lang={lang} />)}
             </div>
           </div>
         </section>
@@ -91,13 +101,13 @@ export default async function HomePage() {
           <div className="container">
             <div className="section-head">
               <div>
-                <span className="eyebrow">Signature safaris</span>
-                <h2>Journeys we love to plan</h2>
+                <span className="eyebrow">{t.home.safarisEyebrow}</span>
+                <h2>{t.home.safarisHeading}</h2>
               </div>
-              <Link href="/safaris" className="link-arrow">All safaris</Link>
+              <Link href={href('/safaris')} className="link-arrow">{t.home.allSafaris}</Link>
             </div>
             <div className="grid grid-3">
-              {safaris.map((s) => <SafariCard key={s.id} s={s} />)}
+              {safaris.map((s) => <SafariCard key={s.id} s={s} lang={lang} />)}
             </div>
           </div>
         </section>
@@ -106,8 +116,8 @@ export default async function HomePage() {
       {home.pillars && home.pillars.length > 0 && (
         <section className="section section-dark">
           <div className="container">
-            <span className="eyebrow">Why All in Tanzania</span>
-            <h2 style={{ maxWidth: '18ch', marginBottom: 48 }}>Safaris planned by people who live them</h2>
+            <span className="eyebrow">{t.home.whyEyebrow}</span>
+            <h2 style={{ maxWidth: '18ch', marginBottom: 48 }}>{t.home.whyHeading}</h2>
             <div className="pillars">
               {home.pillars.map((p) => (
                 <div key={p.id}>
@@ -126,15 +136,12 @@ export default async function HomePage() {
             <Img media={home.expertBanner?.image} size="card" sizes="(max-width: 860px) 100vw, 50vw" />
           </div>
           <div>
-            <span className="eyebrow">Ask a local expert</span>
-            <h2>{home.expertBanner?.heading || `Plan with ${expert.name}, day or night`}</h2>
-            <p className="lead">
-              {home.expertBanner?.body ||
-                'Ask anything: when to see the calving season, which camp suits young children, how long to stay in Ruaha. Type or simply talk, and shape your trip together.'}
-            </p>
+            <span className="eyebrow">{t.home.expertEyebrow}</span>
+            <h2>{home.expertBanner?.heading || t.home.planWith(expert.name)}</h2>
+            <p className="lead">{home.expertBanner?.body || t.home.expertBody}</p>
             <div className="hero-actions">
-              <Link href="/expert" className="btn btn-primary">Start a conversation</Link>
-              <Link href="/plan" className="btn btn-ghost">Build my trip</Link>
+              <Link href={href('/expert')} className="btn btn-primary">{t.home.startConversation}</Link>
+              <Link href={href('/plan')} className="btn btn-ghost">{t.home.buildMyTrip}</Link>
             </div>
           </div>
         </div>

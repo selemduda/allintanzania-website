@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { EnquiryForm } from '@/components/EnquiryForm'
 import { usd } from '@/lib/format'
+import { getDict, localePath, type Lang } from '@/lib/i18n'
 import type { PublicExpert } from '@/lib/payload'
 
 type Estimate = { low: number; high: number; perPerson: number; days: number; travellers: number; season: string }
@@ -32,12 +33,6 @@ const store = {
   },
 }
 
-const SUGGESTIONS = [
-  'When is the best time to see the Great Migration?',
-  'We are a family with two children. Where should we go?',
-  'What can I combine with a week on Zanzibar?',
-  'Tell me about safaris in southern Tanzania',
-]
 
 /** Minimal, safe Markdown: paragraphs, bullet lists, **bold** and links to our own pages or https. */
 function Rich({ text }: { text: string }) {
@@ -92,7 +87,8 @@ type SpeechRecognitionLike = {
   onerror: (() => void) | null
 }
 
-export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; initialQuestion?: string }) {
+export function ExpertChat({ expert, initialQuestion, lang }: { expert: PublicExpert; initialQuestion?: string; lang: Lang }) {
+  const t = getDict(lang).expert
   const [items, setItems] = useState<Item[]>([])
   const [input, setInput] = useState(initialQuestion ?? '')
   const [busy, setBusy] = useState(false)
@@ -150,7 +146,9 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
       if (!('speechSynthesis' in window)) return
       const utterance = new SpeechSynthesisUtterance(clean)
       const voices = window.speechSynthesis.getVoices()
+      utterance.lang = lang === 'no' ? 'nb-NO' : 'en-GB'
       utterance.voice =
+        (lang === 'no' ? voices.find((v) => /^(nb|no|nn)/.test(v.lang)) : undefined) ??
         voices.find((v) => v.lang === 'en-TZ' || v.lang === 'sw-TZ') ??
         voices.find((v) => v.lang === 'en-KE' || v.lang === 'en-ZA') ??
         voices.find((v) => v.lang.startsWith('en-GB')) ??
@@ -159,7 +157,7 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
       window.speechSynthesis.cancel()
       window.speechSynthesis.speak(utterance)
     },
-    [expert.voiceProvider],
+    [expert.voiceProvider, lang],
   )
 
   const send = useCallback(
@@ -168,7 +166,7 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
       if (!message || busy) return
       setInput('')
       setBusy(true)
-      setItems((list) => [...list, { kind: 'visitor', text: message }, { kind: 'expert', text: '', status: 'Thinking…' }])
+      setItems((list) => [...list, { kind: 'visitor', text: message }, { kind: 'expert', text: '', status: t.thinking }])
 
       const updateExpert = (fn: (item: Extract<Item, { kind: 'expert' }>) => Item) =>
         setItems((list) => {
@@ -184,12 +182,12 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
         const res = await fetch('/api/expert', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: token.current, message }),
+          body: JSON.stringify({ token: token.current, message, lang }),
         })
         if (!res.ok || !res.body) {
           const data = await res.json().catch(() => ({}))
           if (data.offline || data.limit) setOffline(true)
-          throw new Error(data.error || 'Something went wrong. Please try again.')
+          throw new Error(data.error || t.error)
         }
         const reader = res.body.getReader()
         const decoder = new TextDecoder()
@@ -245,7 +243,7 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
         setBusy(false)
       }
     },
-    [busy, speak, voiceOn],
+    [busy, speak, voiceOn, lang, t],
   )
 
   const toggleListening = () => {
@@ -257,7 +255,7 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
     const Recognition = w.SpeechRecognition || w.webkitSpeechRecognition
     if (!Recognition) return
     const rec = new Recognition()
-    rec.lang = navigator.language || 'en-GB'
+    rec.lang = lang === 'no' ? 'nb-NO' : navigator.language || 'en-GB'
     rec.interimResults = true
     rec.continuous = false
     let finalText = ''
@@ -314,13 +312,13 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
               audio.current?.pause()
             }}
             aria-pressed={voiceOn}
-            title={voiceOn ? 'Stop reading replies aloud' : 'Read replies aloud'}
+            title={voiceOn ? t.voiceOnTitle : t.voiceOffTitle}
           >
-            {voiceOn ? 'Voice on' : 'Voice off'}
+            {voiceOn ? t.voiceOn : t.voiceOff}
           </button>
           {items.length > 0 && (
-            <button type="button" className="chat-icon" onClick={restart} title="Start a new conversation">
-              New chat
+            <button type="button" className="chat-icon" onClick={restart} title={t.newChatTitle}>
+              {t.newChat}
             </button>
           )}
         </div>
@@ -332,7 +330,7 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
         </div>
         {items.length === 0 && !offline && (
           <div className="chat-suggestions">
-            {SUGGESTIONS.map((s) => (
+            {t.suggestions.map((s) => (
               <button key={s} type="button" className="pill" onClick={() => send(s)}>
                 {s}
               </button>
@@ -353,23 +351,23 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
             case 'estimate':
               return (
                 <div key={i} className="chat-card">
-                  <span className="eyebrow">Estimate · {item.estimate.season} season</span>
+                  <span className="eyebrow">{t.estimate(item.estimate.season)}</span>
                   <div className="estimate-total">
                     {usd(item.estimate.low)} – {usd(item.estimate.high)}
                   </div>
                   <p className="muted small">
-                    About {usd(item.estimate.perPerson)} per person · {item.estimate.days} days · {item.estimate.travellers} traveller
-                    {item.estimate.travellers > 1 ? 's' : ''}
+                    {t.about} {usd(item.estimate.perPerson)} {t.perPerson} · {getDict(lang).days(item.estimate.days)} ·{' '}
+                    {getDict(lang).travellers(item.estimate.travellers)}
                   </p>
-                  <Link className="link-arrow" href={`/plan?route=${encodeURIComponent(item.route)}&tier=${item.tier}`}>
-                    Open in the trip builder
+                  <Link className="link-arrow" href={localePath(lang, `/plan?route=${encodeURIComponent(item.route)}&tier=${item.tier}`)}>
+                    {t.openBuilder}
                   </Link>
                 </div>
               )
             case 'enquiry':
               return (
                 <div key={i} className="chat-card chat-card-ok">
-                  <strong>Sent to our team.</strong> You will hear from one of our safari planners soon.
+                  <strong>{t.sentTitle}</strong> {t.sentBody}
                 </div>
               )
             case 'error':
@@ -378,8 +376,8 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
         })}
         {offline && (
           <div className="chat-card">
-            <p>Leave your details and what you are dreaming of, and one of our team will reply personally.</p>
-            <EnquiryForm source="ai" compact />
+            <p>{t.offline}</p>
+            <EnquiryForm source="ai" compact lang={lang} />
           </div>
         )}
       </div>
@@ -401,10 +399,10 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
                 void send(input)
               }
             }}
-            placeholder={listening ? 'Listening…' : `Ask ${expert.name} anything about your safari`}
+            placeholder={listening ? t.listening : t.placeholder(expert.name)}
             rows={1}
             maxLength={2000}
-            aria-label="Your message"
+            aria-label={t.yourMessage}
           />
           {canListen && (
             <button
@@ -412,8 +410,8 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
               className={`chat-mic ${listening ? 'on' : ''}`}
               onClick={toggleListening}
               aria-pressed={listening}
-              aria-label={listening ? 'Stop listening' : 'Talk instead of typing'}
-              title={listening ? 'Stop listening' : 'Talk instead of typing'}
+              aria-label={listening ? t.stopListening : t.talkInstead}
+              title={listening ? t.stopListening : t.talkInstead}
             >
               <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>
                 <path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z" />
@@ -421,12 +419,12 @@ export function ExpertChat({ expert, initialQuestion }: { expert: PublicExpert; 
             </button>
           )}
           <button type="submit" className="btn btn-primary" disabled={busy || !input.trim()}>
-            Send
+            {t.send}
           </button>
         </form>
       )}
       <p className="chat-foot muted small">
-        {expert.name} is an AI assistant trained on our team&apos;s knowledge and can make mistakes. Our safari planners confirm every detail before you book.
+        {t.foot(expert.name)}
       </p>
     </div>
   )

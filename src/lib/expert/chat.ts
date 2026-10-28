@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import type { Payload } from 'payload'
 
+import type { Lang } from '../i18n'
 import { buildSystemPrompt } from './knowledge'
 import { expertTools, runTool, TOOL_STATUS, type ToolOutcome } from './tools'
 
@@ -28,6 +29,9 @@ export type ChatEvent =
 // keeps it identical between requests so the prompt cache is reused.
 let systemCache: { key: string; text: string; at: number } | null = null
 const SYSTEM_TTL = 5 * 60_000
+
+const NORWEGIAN_SITE =
+  ' The visitor is using the Norwegian version of the website. Reply in Norwegian (Bokmål) unless they write in another language, and put /no in front of website links, e.g. /no/destinations/serengeti.'
 
 async function systemPrompt(payload: Payload, showPrices: boolean) {
   const key = String(showPrices)
@@ -66,10 +70,22 @@ type RunOptions = {
   message: string
   emit: (event: ChatEvent) => void
   signal?: AbortSignal
+  /** The language version of the site the visitor is using. */
+  lang?: Lang
 }
 
 /** Runs one visitor message through the expert, streaming text and tool events to `emit`. */
-export async function runExpertTurn({ client, payload, showPrices, messages, transcript, message, emit, signal }: RunOptions) {
+export async function runExpertTurn({
+  client,
+  payload,
+  showPrices,
+  messages,
+  transcript,
+  message,
+  emit,
+  signal,
+  lang = 'en',
+}: RunOptions) {
   const system = await systemPrompt(payload, showPrices)
   const tools = expertTools(showPrices)
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -90,7 +106,7 @@ export async function runExpertTurn({ client, payload, showPrices, messages, tra
         tools,
         system: [
           { type: 'text', text: system, cache_control: { type: 'ephemeral' } },
-          { type: 'text', text: `Today's date is ${today}.` },
+          { type: 'text', text: `Today's date is ${today}.${lang === 'no' ? NORWEGIAN_SITE : ''}` },
         ],
         // Cache the conversation so far, so each new message only pays for what is new.
         cache_control: { type: 'ephemeral' },
@@ -102,7 +118,7 @@ export async function runExpertTurn({ client, payload, showPrices, messages, tra
     stream.on('text', (delta) => emit({ type: 'text', text: delta }))
     stream.on('streamEvent', (event) => {
       if (event.type === 'content_block_start' && event.content_block.type === 'tool_use') {
-        emit({ type: 'status', text: TOOL_STATUS[event.content_block.name] ?? 'One moment…' })
+        emit({ type: 'status', text: TOOL_STATUS[lang][event.content_block.name] ?? '…' })
       }
     })
 
@@ -114,7 +130,10 @@ export async function runExpertTurn({ client, payload, showPrices, messages, tra
       transcript.pop()
       emit({
         type: 'text',
-        text: "\n\nPole, I can't help with that one. Is there anything about your safari I can help with?",
+        text:
+          lang === 'no'
+            ? '\n\nPole, det kan jeg dessverre ikke hjelpe med. Er det noe om safarien din jeg kan hjelpe deg med?'
+            : "\n\nPole, I can't help with that one. Is there anything about your safari I can help with?",
       })
       emit({ type: 'done' })
       return
@@ -134,6 +153,7 @@ export async function runExpertTurn({ client, payload, showPrices, messages, tra
         outcome = await runTool(use.name, use.input, {
           payload,
           showPrices,
+          lang,
           transcript: () => [...transcript, ...(reply ? [{ role: 'expert' as const, text: reply }] : [])],
         })
       } catch (err) {
@@ -149,7 +169,10 @@ export async function runExpertTurn({ client, payload, showPrices, messages, tra
 
   // A turn must end on an assistant message; if the step limit cut it short, close it politely.
   if (messages.at(-1)?.role === 'user') {
-    const note = 'Let me pass this to one of our team so they can look into it properly.'
+    const note =
+      lang === 'no'
+        ? 'La meg sende dette videre til en av oss, så de kan se ordentlig på det.'
+        : 'Let me pass this to one of our team so they can look into it properly.'
     messages.push({ role: 'assistant', content: note })
     emit({ type: 'text', text: note })
     reply += (reply ? '\n\n' : '') + note

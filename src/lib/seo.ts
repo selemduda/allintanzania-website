@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import type { Media } from '@/payload-types'
 
 import { mediaPath, rel } from './format'
+import { HTML_LANG, LANGS, localePath, type Lang } from './i18n'
 
 // Read at run time: NEXT_PUBLIC_ variables are frozen into the build, which happens without .env.
 export const siteUrl = () => {
@@ -21,27 +22,38 @@ export function shareImage(media: Media | number | null | undefined) {
   return url.startsWith('http') ? url : siteUrl() + url
 }
 
-/** Title, description, canonical URL and social preview for one page. */
+/** Every language version of a page, for hreflang links and the sitemap. */
+export const languageAlternates = (path: string) => ({
+  ...Object.fromEntries(LANGS.map((l) => [HTML_LANG[l], localePath(l, path)])),
+  'x-default': path,
+})
+
+/** Title, description, canonical URL, language versions and social preview for one page. */
 export function pageMeta({
+  lang,
   path,
   title,
   description,
   image,
 }: {
+  lang: Lang
+  /** The page's path without a language prefix, e.g. '/safaris'. */
   path: string
   title?: string
   description?: string | null
   image?: Media | number | null
 }): Metadata {
   const img = shareImage(image)
+  const url = localePath(lang, path)
   return {
-    title,
+    ...(title ? { title } : {}),
     description: description ?? undefined,
-    alternates: { canonical: path },
+    alternates: { canonical: url, languages: languageAlternates(path) },
     openGraph: {
       title,
       description: description ?? undefined,
-      url: path,
+      url,
+      locale: lang === 'no' ? 'nb_NO' : 'en_GB',
       ...(img ? { images: [{ url: img }] } : {}),
     },
   }

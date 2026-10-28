@@ -3,26 +3,33 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
+import { getDict, localePath } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { getPayloadClient } from '@/lib/payload'
 import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = pageMeta({
-  path: '/about',
-  title: 'About us',
-  description: 'A Tanzanian–Norwegian safari company with offices in Tanzania and Tønsberg, Norway.',
-})
 
-export default async function AboutPage() {
+type Props = { params: Promise<{ lang: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const lang = await pageLang(params)
+  const t = getDict(lang).about
+  return pageMeta({ lang, path: '/about', title: t.title, description: t.description })
+}
+
+export default async function AboutPage({ params }: Props) {
+  const lang = await pageLang(params)
+  const t = getDict(lang)
   const payload = await getPayloadClient()
-  const home = await payload.findGlobal({ slug: 'home-page' })
+  const home = await payload.findGlobal({ slug: 'home-page', locale: lang })
   return (
     <>
       <section className="container page-intro" style={{ textAlign: 'center' }}>
         <Image src="/brand/logo.png" alt="All in Tanzania" width={420} height={167} style={{ margin: '0 auto 32px', height: 'auto' }} />
-        <h1>Tanzania is our home</h1>
+        <h1>{t.about.heading}</h1>
         <p className="lead" style={{ margin: '0 auto' }}>
-          All in Tanzania is a Tanzanian-owned safari company. Our guides grew up between the Serengeti and Kilimanjaro, and every journey we plan is shaped around one thing: your choice, your holiday, our mission.
+          {t.about.lead}
         </p>
       </section>
       {home.pillars && home.pillars.length > 0 && (
@@ -39,10 +46,10 @@ export default async function AboutPage() {
       )}
       <section className="section" style={{ textAlign: 'center' }}>
         <div className="container">
-          <h2>Ready when you are</h2>
+          <h2>{t.about.ready}</h2>
           <div className="hero-actions" style={{ justifyContent: 'center' }}>
-            <Link href="/plan" className="btn btn-primary">Build your dream safari</Link>
-            <Link href="/contact" className="btn btn-ghost">Contact us</Link>
+            <Link href={localePath(lang, '/plan')} className="btn btn-primary">{t.buildDream}</Link>
+            <Link href={localePath(lang, '/contact')} className="btn btn-ghost">{t.footer.contactUs}</Link>
           </div>
         </div>
       </section>

@@ -84,10 +84,17 @@ export function expertTools(showPrices: boolean): Anthropic.Beta.BetaTool[] {
 }
 
 /** Short status line the chat shows while a tool runs. */
-export const TOOL_STATUS: Record<string, string> = {
-  get_details: 'Looking that up…',
-  estimate_trip: 'Checking our price list…',
-  save_enquiry: 'Passing your details to the team…',
+export const TOOL_STATUS: Record<'en' | 'no', Record<string, string>> = {
+  en: {
+    get_details: 'Looking that up…',
+    estimate_trip: 'Checking our price list…',
+    save_enquiry: 'Passing your details to the team…',
+  },
+  no: {
+    get_details: 'Slår det opp…',
+    estimate_trip: 'Sjekker prislisten vår…',
+    save_enquiry: 'Sender opplysningene dine til teamet…',
+  },
 }
 
 const Stop = z.object({ destination: z.string().max(80), nights: z.number().int().min(0).max(30) })
@@ -121,6 +128,7 @@ export type ToolContext = {
   showPrices: boolean
   /** Plain-text conversation so far, attached to enquiries for the team. */
   transcript: () => { role: string; text: string }[]
+  lang?: 'en' | 'no'
 }
 
 export type ToolOutcome = {
@@ -220,6 +228,7 @@ export async function runTool(name: string, rawInput: unknown, ctx: ToolContext)
           estimateTotal: estimate?.total,
           chatTranscript: ctx.transcript(),
           source: 'ai',
+          language: ctx.lang ?? 'en',
         },
       })
       await notifyTeam(payload, doc).catch((err) => payload.logger.error({ err }, 'Enquiry email failed'))

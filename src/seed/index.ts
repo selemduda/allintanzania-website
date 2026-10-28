@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url'
 
 import { parsePriceFile } from '../lib/priceList'
 import { destinations, itineraries, lodges, posts } from './content'
+import { destinationsNo, expertNo, homeNo, itinerariesNo, lodgesNo, postsNo, siteNo } from './content.no'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const mediaDir = path.join(dirname, 'media')
@@ -79,6 +80,110 @@ async function upsertBySlug<T extends 'destinations' | 'lodges' | 'itineraries' 
   if (existing.docs[0]) return existing.docs[0].id as number
   const doc = await payload.create({ collection, data: { ...data, slug, _status: 'published' } as never })
   return doc.id as number
+}
+
+type Translatable = 'destinations' | 'lodges' | 'itineraries' | 'posts'
+
+/** Adds the Norwegian version of a seeded document, unless it already has one. */
+async function translateDoc(
+  payload: Payload,
+  collection: Translatable,
+  slug: string,
+  build: (en: Record<string, unknown>) => Record<string, unknown>,
+) {
+  const query = { collection, where: { slug: { equals: slug } }, limit: 1, depth: 0, draft: true } as const
+  const [no, en] = await Promise.all([
+    payload.find({ ...query, locale: 'no', fallbackLocale: false }),
+    payload.find({ ...query, locale: 'en' }),
+  ])
+  const doc = no.docs[0] as unknown as Record<string, unknown> | undefined
+  if (!doc || doc.summary || doc.excerpt) return
+  await payload.update({
+    collection,
+    id: doc.id as number,
+    locale: 'no',
+    depth: 0,
+    data: { ...build(en.docs[0] as unknown as Record<string, unknown>), _status: 'published' } as never,
+  })
+}
+
+const slugOf = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+type Row = { id?: string | null } & Record<string, unknown>
+
+async function addNorwegian(payload: Payload) {
+  for (const [slug, d] of Object.entries(destinationsNo)) {
+    await translateDoc(payload, 'destinations', slug, (en) => ({
+      name: d.name ?? en.name,
+      tagline: d.tagline,
+      summary: d.summary,
+      body: richText(d.body.map((p) => ['p', p] as Block)),
+      highlights: ((en.highlights as Row[]) ?? []).map((row, i) => ({ id: row.id, text: d.highlights[i] ?? row.text })),
+      ...(d.wildlife ? { wildlife: d.wildlife } : {}),
+    }))
+  }
+  for (const [name, l] of Object.entries(lodgesNo)) {
+    await translateDoc(payload, 'lodges', slugOf(name), () => ({ summary: l.summary, amenities: l.amenities }))
+  }
+  for (const [title, s] of Object.entries(itinerariesNo)) {
+    await translateDoc(payload, 'itineraries', slugOf(title), (en) => ({
+      title: s.title,
+      summary: s.summary,
+      days: ((en.days as Row[]) ?? []).map((row, i) => ({ ...row, ...(s.days[i] ?? {}) })),
+      included: s.included,
+      excluded: s.excluded,
+    }))
+  }
+  for (const [title, p] of Object.entries(postsNo)) {
+    await translateDoc(payload, 'posts', slugOf(title), () => ({
+      title: p.title,
+      excerpt: p.excerpt,
+      body: richText(p.body),
+    }))
+  }
+
+  const [homeNoDoc, homeEn] = await Promise.all([
+    payload.findGlobal({ slug: 'home-page', locale: 'no', fallbackLocale: false, depth: 0, draft: true }),
+    payload.findGlobal({ slug: 'home-page', locale: 'en', depth: 0, draft: true }),
+  ])
+  if (!homeNoDoc.heroSubheading && homeEn.heroSlides?.length) {
+    const name = (await payload.findGlobal({ slug: 'expert-settings', depth: 0 })).expertName || 'Baraka'
+    await payload.updateGlobal({
+      slug: 'home-page',
+      locale: 'no',
+      depth: 0,
+      data: {
+        _status: 'published',
+        heroSlides: homeEn.heroSlides.map((row, i) => ({ ...row, ...(homeNo.heroSlides[i] ?? {}) })),
+        heroSubheading: homeNo.heroSubheading,
+        intro: { ...homeEn.intro, ...homeNo.intro },
+        pillars: (homeEn.pillars ?? []).map((row, i) => ({ ...row, ...(homeNo.pillars[i] ?? {}) })),
+        expertBanner: {
+          ...homeEn.expertBanner,
+          heading: homeNo.expertBanner.heading(name),
+          body: homeNo.expertBanner.body,
+        },
+      } as never,
+    })
+  }
+
+  const siteNoDoc = await payload.findGlobal({ slug: 'site-settings', locale: 'no', fallbackLocale: false, depth: 0 })
+  if (!siteNoDoc.footerNote) {
+    await payload.updateGlobal({ slug: 'site-settings', locale: 'no', data: siteNo })
+  }
+
+  const [expertNoDoc, expertEn] = await Promise.all([
+    payload.findGlobal({ slug: 'expert-settings', locale: 'no', fallbackLocale: false, depth: 0 }),
+    payload.findGlobal({ slug: 'expert-settings', locale: 'en', depth: 0 }),
+  ])
+  // An untranslated greeting comes back as the English default, so compare with the English one.
+  if (!expertNoDoc.greeting || expertNoDoc.greeting === expertEn.greeting) {
+    await payload.updateGlobal({
+      slug: 'expert-settings',
+      locale: 'no',
+      data: { expertTitle: expertNo.expertTitle, greeting: expertNo.greeting(expertNoDoc.expertName || 'Baraka') },
+    })
+  }
+  payload.logger.info('Norwegian translations ready')
 }
 
 async function run() {
@@ -228,6 +333,8 @@ async function run() {
       },
     })
   }
+
+  await addNorwegian(payload)
 
   const lists = await payload.count({ collection: 'price-lists' })
   if (!lists.totalDocs) {

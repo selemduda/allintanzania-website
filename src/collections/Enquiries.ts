@@ -56,6 +56,16 @@ export const Enquiries: CollectionConfig = {
       ],
     },
     {
+      name: 'language',
+      type: 'select',
+      defaultValue: 'en',
+      admin: { position: 'sidebar', description: 'The website language the visitor used: reply in it.' },
+      options: [
+        { label: 'English', value: 'en' },
+        { label: 'Norwegian', value: 'no' },
+      ],
+    },
+    {
       name: 'status',
       type: 'select',
       defaultValue: 'new',

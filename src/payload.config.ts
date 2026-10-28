@@ -27,6 +27,15 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+  // Norwegian pages live under /no; anything not yet translated falls back to English.
+  localization: {
+    locales: [
+      { code: 'en', label: 'English' },
+      { code: 'no', label: 'Norsk' },
+    ],
+    defaultLocale: 'en',
+    fallback: true,
+  },
   admin: {
     user: Users.slug,
     importMap: {

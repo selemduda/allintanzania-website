@@ -20,12 +20,12 @@ export const Posts: CollectionConfig = {
   versions: { drafts: true },
   defaultSort: '-publishedAt',
   fields: [
-    { name: 'title', type: 'text', required: true },
+    { name: 'title', type: 'text', localized: true, required: true },
     slugField('title'),
     { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' }, defaultValue: () => new Date() },
     { name: 'author', type: 'text', admin: { position: 'sidebar' } },
     { name: 'heroImage', type: 'upload', relationTo: 'media' },
-    { name: 'excerpt', type: 'textarea' },
-    { name: 'body', type: 'richText' },
+    { name: 'excerpt', type: 'textarea', localized: true },
+    { name: 'body', type: 'richText', localized: true },
   ],
 }

@@ -31,7 +31,7 @@ export const Itineraries: CollectionConfig = {
   },
   versions: { drafts: true },
   fields: [
-    { name: 'title', type: 'text', required: true },
+    { name: 'title', type: 'text', localized: true, required: true },
     slugField('title'),
     {
       type: 'row',
@@ -47,7 +47,7 @@ export const Itineraries: CollectionConfig = {
     },
     { name: 'styles', type: 'select', hasMany: true, options: TRIP_STYLES },
     { name: 'heroImage', type: 'upload', relationTo: 'media' },
-    { name: 'summary', type: 'textarea', required: true },
+    { name: 'summary', type: 'textarea', localized: true, required: true },
     {
       name: 'days',
       type: 'array',
@@ -57,8 +57,8 @@ export const Itineraries: CollectionConfig = {
         {
           type: 'row',
           fields: [
-            { name: 'dayRange', type: 'text', required: true, admin: { description: 'e.g. "Day 1" or "Days 2–3"' } },
-            { name: 'title', type: 'text', required: true },
+            { name: 'dayRange', type: 'text', localized: true, required: true, admin: { description: 'e.g. "Day 1" or "Days 2–3"' } },
+            { name: 'title', type: 'text', localized: true, required: true },
           ],
         },
         {
@@ -69,11 +69,11 @@ export const Itineraries: CollectionConfig = {
             { name: 'nights', type: 'number', defaultValue: 1, min: 0 },
           ],
         },
-        { name: 'description', type: 'textarea' },
+        { name: 'description', type: 'textarea', localized: true },
       ],
     },
-    { name: 'included', type: 'text', hasMany: true },
-    { name: 'excluded', type: 'text', hasMany: true },
+    { name: 'included', type: 'text', localized: true, hasMany: true },
+    { name: 'excluded', type: 'text', localized: true, hasMany: true },
     { name: 'featured', type: 'checkbox', admin: { position: 'sidebar' } },
   ],
 }

@@ -232,6 +232,15 @@ p {
   opacity: 1;
   border-bottom-color: currentColor;
 }
+.main-nav a.lang-switch {
+  align-self: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 4px 10px;
+  line-height: 1.2;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
 .header-actions {
   display: flex;
   align-items: center;
@@ -277,7 +286,9 @@ p {
     top: 84px;
     left: 0;
     right: 0;
-    bottom: 0;
+    /* The header's backdrop blur makes it the containing block, so size the panel to the screen. */
+    height: calc(100dvh - 84px);
+    overflow-y: auto;
     flex-direction: column;
     gap: 0;
     background: var(--paper);
@@ -293,6 +304,13 @@ p {
     font-size: 1.8rem;
     padding: 12px 0;
     border-bottom: 1px solid var(--line);
+  }
+  .main-nav a.lang-switch {
+    align-self: flex-start;
+    margin-top: 20px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 0.85rem;
   }
   .header-actions .btn {
     display: none;

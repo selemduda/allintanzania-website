@@ -4,20 +4,24 @@ import React from 'react'
 
 import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
+import { getDict } from '@/lib/i18n'
+import { pageLang } from '@/lib/pageLang'
 import { findBySlug } from '@/lib/payload'
 import { pageMeta } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: Promise<{ slug: string }> }
+type Props = { params: Promise<{ lang: string; slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const p = await findBySlug('posts', (await params).slug)
-  return p ? pageMeta({ path: `/journal/${p.slug}`, title: p.title, description: p.excerpt, image: p.heroImage }) : {}
+  const lang = await pageLang(params)
+  const p = await findBySlug('posts', (await params).slug, lang)
+  return p ? pageMeta({ lang, path: `/journal/${p.slug}`, title: p.title, description: p.excerpt, image: p.heroImage }) : {}
 }
 
 export default async function PostPage({ params }: Props) {
-  const p = await findBySlug('posts', (await params).slug)
+  const lang = await pageLang(params)
+  const p = await findBySlug('posts', (await params).slug, lang)
   if (!p) notFound()
   return (
     <>
@@ -26,7 +30,7 @@ export default async function PostPage({ params }: Props) {
           <Img media={p.heroImage} size="hero" priority />
         </div>
         <div className="container hero-content">
-          <span className="eyebrow">Journal{p.author ? ` · ${p.author}` : ''}</span>
+          <span className="eyebrow">{getDict(lang).nav.journal}{p.author ? ` · ${p.author}` : ''}</span>
           <h1>{p.title}</h1>
         </div>
       </section>

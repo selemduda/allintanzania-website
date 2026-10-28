@@ -2,10 +2,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
+import { getDict, localePath, type Lang } from '@/lib/i18n'
 import { getSiteSettings } from '@/lib/payload'
 
-export async function Footer() {
-  const site = await getSiteSettings()
+export async function Footer({ lang }: { lang: Lang }) {
+  const site = await getSiteSettings(lang)
+  const t = getDict(lang)
+  const href = (path: string) => localePath(lang, path)
   const year = new Date().getFullYear()
   return (
     <footer className="site-footer">
@@ -13,30 +16,29 @@ export async function Footer() {
         <div>
           <Image src="/brand/logo-white.png" alt="All in Tanzania" width={200} height={80} />
           <p className="footer-note">
-            {site.footerNote ||
-              'Tailor-made safaris across Tanzania, planned by guides who grew up here.'}
+            {site.footerNote || t.footer.note}
           </p>
         </div>
         <div>
-          <h4>Explore</h4>
+          <h4>{t.footer.explore}</h4>
           <ul>
-            <li><Link href="/destinations">Destinations</Link></li>
-            <li><Link href="/safaris">Safaris</Link></li>
-            <li><Link href="/lodges">Lodges & Camps</Link></li>
-            <li><Link href="/journal">Journal</Link></li>
+            <li><Link href={href('/destinations')}>{t.nav.destinations}</Link></li>
+            <li><Link href={href('/safaris')}>{t.nav.safaris}</Link></li>
+            <li><Link href={href('/lodges')}>{t.nav.lodges}</Link></li>
+            <li><Link href={href('/journal')}>{t.nav.journal}</Link></li>
           </ul>
         </div>
         <div>
-          <h4>Plan</h4>
+          <h4>{t.footer.plan}</h4>
           <ul>
-            <li><Link href="/plan">Build your dream trip</Link></li>
-            <li><Link href="/expert">Talk to a safari expert</Link></li>
-            <li><Link href="/contact">Contact us</Link></li>
-            <li><Link href="/about">About us</Link></li>
+            <li><Link href={href('/plan')}>{t.footer.buildTrip}</Link></li>
+            <li><Link href={href('/expert')}>{t.footer.talkExpert}</Link></li>
+            <li><Link href={href('/contact')}>{t.footer.contactUs}</Link></li>
+            <li><Link href={href('/about')}>{t.footer.aboutUs}</Link></li>
           </ul>
         </div>
         <div>
-          <h4>Get in touch</h4>
+          <h4>{t.footer.getInTouch}</h4>
           <ul>
             {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
             {site.phone && <li><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></li>}

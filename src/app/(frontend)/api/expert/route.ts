@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { randomUUID } from 'crypto'
 
 import { MAX_MESSAGE_LENGTH, MAX_TURNS, runExpertTurn, type ChatEvent, type TranscriptLine } from '@/lib/expert/chat'
+import { isLang } from '@/lib/i18n'
 import { getPayloadClient, getPublicExpert, getShowPrices } from '@/lib/payload'
 import { clientIp, rateLimit } from '@/lib/rateLimit'
 import type { ExpertChat } from '@/payload-types'
@@ -44,7 +45,8 @@ export async function POST(req: Request) {
     return Response.json({ error: 'You are sending messages very quickly. Please wait a moment.' }, { status: 429 })
   }
 
-  const body = (await req.json().catch(() => null)) as { token?: unknown; message?: unknown } | null
+  const body = (await req.json().catch(() => null)) as { token?: unknown; message?: unknown; lang?: unknown } | null
+  const lang = isLang(body?.lang) ? body.lang : 'en'
   const message = typeof body?.message === 'string' ? body.message.trim().slice(0, MAX_MESSAGE_LENGTH) : ''
   if (!message) return Response.json({ error: 'Please type a message.' }, { status: 400 })
 
@@ -80,6 +82,7 @@ export async function POST(req: Request) {
           messages,
           transcript,
           message,
+          lang,
           emit: (event) => {
             if (event.type === 'enquiry') enquiryId = event.id
             send(event.type === 'enquiry' ? { type: 'enquiry', id: 0 } : event)
