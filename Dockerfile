@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat
 
 FROM base AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 
 # Full source and dependencies. Also used to run one-off tasks such as `npm run seed`.
