@@ -161,3 +161,23 @@ describe('AI expert', () => {
     expect(lexicalToText(value)).toBe('Hello world\n\nTwo')
   })
 })
+
+describe('Dropbox import helpers', async () => {
+  const { altFromName } = await import('@/collections/mediaDropbox')
+  const { safePath } = await import('@/lib/dropbox')
+
+  it('suggests alt text from file names', () => {
+    expect(altFromName('SelousJuly 158 (2).jpg')).toBe('Selous July')
+    expect(altFromName('DSC_0955.JPG')).toBe('Safari photo')
+    expect(altFromName('ruaha_lion-pride.jpg')).toBe('ruaha lion pride')
+  })
+
+  it('keeps paths inside the configured folder', () => {
+    vi.stubEnv('DROPBOX_FOLDER', '/AllinTanzania')
+    expect(safePath('/AllinTanzania/Pictures')).toBe('/AllinTanzania/Pictures')
+    expect(safePath('/Private/ids')).toBe('/AllinTanzania')
+    expect(() => safePath('/AllinTanzania/../Private')).toThrow()
+    vi.unstubAllEnvs()
+    expect(safePath('/')).toBe('')
+  })
+})

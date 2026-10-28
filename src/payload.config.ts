@@ -32,6 +32,14 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      views: {
+        dropboxImport: {
+          Component: '/components/admin/DropboxImportView#DropboxImportView',
+          path: '/dropbox-import',
+        },
+      },
+    },
     meta: {
       titleSuffix: ' · All in Tanzania',
       icons: [{ rel: 'icon', type: 'image/png', url: '/favicon.png' }],

@@ -1,13 +1,18 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, editors } from '../access/roles'
+import { dropboxEndpoints } from './mediaDropbox'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     group: 'Content',
     defaultColumns: ['filename', 'alt', 'source', 'updatedAt'],
+    components: {
+      beforeListTable: ['/components/admin/DropboxImportLink#DropboxImportLink'],
+    },
   },
+  endpoints: dropboxEndpoints,
   // Lets the team organise photos into folders (e.g. Serengeti, Lodges, Wildlife).
   folders: true,
   access: {
@@ -53,6 +58,8 @@ export const Media: CollectionConfig = {
   upload: {
     mimeTypes: ['image/*', 'video/mp4', 'video/webm'],
     focalPoint: true,
+    // Camera originals can be 6000px and 7 MB; keep a sharp 3000px master instead.
+    resizeOptions: { width: 3000, height: 3000, fit: 'inside', withoutEnlargement: true },
     imageSizes: [
       { name: 'thumbnail', width: 480, height: 320, position: 'centre' },
       { name: 'card', width: 900, height: 640, position: 'centre' },

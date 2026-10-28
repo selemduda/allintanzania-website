@@ -54,6 +54,22 @@ The first build takes about 5 minutes. The seed loads the starter content and ph
 
 Open `https://164-90-1-2.sslip.io` for the site and `https://164-90-1-2.sslip.io/admin` for the admin.
 
+## Connect Dropbox (photo import)
+
+The admin has an **Import photos from Dropbox** screen (Media → Import photos from Dropbox) where staff tick photos and copy them into the website. To connect it:
+
+1. Go to [dropbox.com/developers/apps](https://www.dropbox.com/developers/apps) → **Create app** → *Scoped access* → *Full Dropbox* → name it, e.g. `allintanzania-website`.
+2. On the **Permissions** tab tick `files.metadata.read` and `files.content.read`, then **Submit**.
+3. On the **Settings** tab copy the *App key* and *App secret*.
+4. Open this address in your browser (with your app key filled in), allow access, and copy the code it shows:
+   `https://www.dropbox.com/oauth2/authorize?client_id=APP_KEY&response_type=code&token_access_type=offline`
+5. On the Droplet, swap in your key, secret and code and run:
+   ```bash
+   curl https://api.dropboxapi.com/oauth2/token -d code=CODE -d grant_type=authorization_code -u APP_KEY:APP_SECRET
+   ```
+   Copy the `refresh_token` from the reply.
+6. In `.env` set `DROPBOX_APP_KEY`, `DROPBOX_APP_SECRET`, `DROPBOX_REFRESH_TOKEN`, and `DROPBOX_FOLDER=/AllinTanzania` so staff only see the company folder. Then run `docker compose up -d`.
+
 ## Updating
 
 ```bash
