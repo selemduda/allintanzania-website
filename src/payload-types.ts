@@ -73,6 +73,7 @@ export interface Config {
     posts: Post;
     media: Media;
     enquiries: Enquiry;
+    'expert-chats': ExpertChat;
     'price-lists': PriceList;
     users: User;
     'payload-kv': PayloadKv;
@@ -93,6 +94,7 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    'expert-chats': ExpertChatsSelect<false> | ExpertChatsSelect<true>;
     'price-lists': PriceListsSelect<false> | PriceListsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -499,6 +501,45 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Conversations with the AI safari expert on the website.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expert-chats".
+ */
+export interface ExpertChat {
+  id: number;
+  /**
+   * The visitor's first question.
+   */
+  summary?: string | null;
+  turns?: number | null;
+  enquiry?: (number | null) | Enquiry;
+  /**
+   * What the visitor and the expert said.
+   */
+  transcript?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  token?: string | null;
+  messages?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Upload your rate sheet (Excel or CSV). Download the template from /price-list-template.csv to see the columns. The active list drives the trip estimator and the AI expert.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -598,6 +639,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'enquiries';
         value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'expert-chats';
+        value: number | ExpertChat;
       } | null)
     | ({
         relationTo: 'price-lists';
@@ -835,6 +880,20 @@ export interface EnquiriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expert-chats_select".
+ */
+export interface ExpertChatsSelect<T extends boolean = true> {
+  summary?: T;
+  turns?: T;
+  enquiry?: T;
+  transcript?: T;
+  token?: T;
+  messages?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "price-lists_select".
  */
 export interface PriceListsSelect<T extends boolean = true> {
@@ -1020,6 +1079,10 @@ export interface SiteSetting {
 export interface PricingSetting {
   id: number;
   /**
+   * When off, visitors see "price on request": the trip builder and the AI expert collect trip details and send them to the team for a quote. Staff still see the internal estimate on each enquiry. Turn on once your real price list is uploaded.
+   */
+  showPrices?: boolean | null;
+  /**
    * Which season each month falls in.
    */
   seasons: {
@@ -1174,6 +1237,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  * via the `definition` "pricing-settings_select".
  */
 export interface PricingSettingsSelect<T extends boolean = true> {
+  showPrices?: T;
   seasons?:
     | T
     | {

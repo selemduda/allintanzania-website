@@ -14,6 +14,16 @@ export const PricingSettings: GlobalConfig = {
   access: { read: loggedIn, update: admins },
   fields: [
     {
+      name: 'showPrices',
+      type: 'checkbox',
+      label: 'Show prices on the website',
+      defaultValue: false,
+      admin: {
+        description:
+          'When off, visitors see "price on request": the trip builder and the AI expert collect trip details and send them to the team for a quote. Staff still see the internal estimate on each enquiry. Turn on once your real price list is uploaded.',
+      },
+    },
+    {
       name: 'seasons',
       type: 'group',
       admin: { description: 'Which season each month falls in.' },

@@ -25,6 +25,13 @@ export const getPublicExpert = cache(async () => {
   }
 })
 
+/** Whether visitors see prices, or "price on request". */
+export const getShowPrices = cache(async () => {
+  const payload = await getPayloadClient()
+  const settings = await payload.findGlobal({ slug: 'pricing-settings', depth: 0, overrideAccess: true })
+  return settings.showPrices === true
+})
+
 export type PublicExpert = Awaited<ReturnType<typeof getPublicExpert>>
 
 export async function findBySlug<T extends 'destinations' | 'lodges' | 'itineraries' | 'posts'>(

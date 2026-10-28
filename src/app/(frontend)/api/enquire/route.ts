@@ -1,5 +1,5 @@
 import { estimateTrip, loadPricingContext, parseTripRequest, publicEstimate } from '@/lib/pricing'
-import { getPayloadClient } from '@/lib/payload'
+import { getPayloadClient, getShowPrices } from '@/lib/payload'
 import { clientIp, rateLimit } from '@/lib/rateLimit'
 import { notifyTeam } from '@/lib/notify'
 
@@ -51,5 +51,7 @@ export async function POST(req: Request) {
     },
   })
   await notifyTeam(payload, doc).catch((err) => payload.logger.error({ err }, 'Enquiry email failed'))
-  return Response.json({ ok: true, estimate: estimate ? publicEstimate(estimate) : null })
+  // The team always gets the internal estimate; visitors only when prices are public.
+  const showPrices = await getShowPrices()
+  return Response.json({ ok: true, estimate: estimate && showPrices ? publicEstimate(estimate) : null })
 }

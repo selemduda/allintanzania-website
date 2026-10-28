@@ -104,7 +104,7 @@ export default async function HomePage() {
         <section className="section section-dark">
           <div className="container">
             <span className="eyebrow">Why All in Tanzania</span>
-            <h2 style={{ maxWidth: '18ch', marginBottom: 48 }}>Your choice. Your holiday. Our mission.</h2>
+            <h2 style={{ maxWidth: '18ch', marginBottom: 48 }}>Safaris planned by people who live them</h2>
             <div className="pillars">
               {home.pillars.map((p) => (
                 <div key={p.id}>
@@ -127,7 +127,7 @@ export default async function HomePage() {
             <h2>{home.expertBanner?.heading || `Plan with ${expert.name}, day or night`}</h2>
             <p className="lead">
               {home.expertBanner?.body ||
-                'Ask anything: when to see the calving season, which camp suits young children, how long to stay in Ruaha. Type or simply talk, and get an instant price estimate for your trip.'}
+                'Ask anything: when to see the calving season, which camp suits young children, how long to stay in Ruaha. Type or simply talk, and shape your trip together.'}
             </p>
             <div className="hero-actions">
               <Link href="/expert" className="btn btn-primary">Start a conversation</Link>

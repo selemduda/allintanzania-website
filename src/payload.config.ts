@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url'
 
 import { Destinations } from './collections/Destinations'
 import { Enquiries } from './collections/Enquiries'
+import { ExpertChats } from './collections/ExpertChats'
 import { Itineraries } from './collections/Itineraries'
 import { Lodges } from './collections/Lodges'
 import { Media } from './collections/Media'
@@ -43,6 +44,7 @@ export default buildConfig({
     Posts,
     Media,
     Enquiries,
+    ExpertChats,
     PriceLists,
     Users,
   ],

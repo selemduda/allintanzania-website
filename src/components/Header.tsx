@@ -14,10 +14,20 @@ const NAV = [
   { href: '/contact', label: 'Contact' },
 ]
 
+const HERO_PAGES = /^\/(about|(destinations|safaris|lodges|journal)\/[^/]+)?$/
+
 export function Header() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [lastPath, setLastPath] = useState(pathname)
+  if (pathname !== lastPath) {
+    // Close the mobile menu after navigating.
+    setLastPath(pathname)
+    setOpen(false)
+  }
+  // Only pages that open with a full-bleed photo get the see-through header.
+  const overHero = HERO_PAGES.test(pathname ?? '')
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -26,9 +36,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => setOpen(false), [pathname])
-
-  const solid = scrolled || open
+  const solid = scrolled || open || !overHero
   return (
     <header className={`site-header ${solid ? 'is-solid' : ''} ${open ? 'is-open' : ''}`}>
       <div className="container header-inner">

@@ -43,10 +43,13 @@ export function TripBuilder({
   destinations,
   initialStops,
   initialTier,
+  showPrices,
 }: {
   destinations: BuilderDestination[]
   initialStops: Stop[]
   initialTier: Tier
+  /** When false the team quotes on request, so no estimate is fetched or shown. */
+  showPrices: boolean
 }) {
   const [stops, setStops] = useState<Stop[]>(initialStops)
   const [month, setMonth] = useState(() => ((new Date().getMonth() + 3) % 12) + 1)
@@ -62,10 +65,8 @@ export function TripBuilder({
   const trip = useMemo(() => ({ stops, month, adults, children, tier }), [stops, month, adults, children, tier])
 
   useEffect(() => {
-    if (!stops.length) {
-      setEstimate(null)
-      return
-    }
+    // With no stops the panel hides any previous estimate, so there is nothing to fetch.
+    if (!showPrices || !stops.length) return
     const controller = new AbortController()
     const timer = setTimeout(async () => {
       setLoading(true)
@@ -90,7 +91,7 @@ export function TripBuilder({
       clearTimeout(timer)
       controller.abort()
     }
-  }, [trip, stops.length])
+  }, [trip, stops.length, showPrices])
 
   const toggle = (slug: string) =>
     setStops((s) =>
@@ -192,8 +193,41 @@ export function TripBuilder({
       </div>
 
       <aside className="builder-summary" aria-live="polite">
-        <span className="eyebrow">Your estimate</span>
-        {!stops.length && <p className="muted">Choose at least one destination to see a price.</p>}
+        <span className="eyebrow">{showPrices ? 'Your estimate' : 'Your trip'}</span>
+        {!stops.length && (
+          <p className="muted">
+            {showPrices ? 'Choose at least one destination to see a price.' : 'Choose at least one destination to start.'}
+          </p>
+        )}
+        {!showPrices && stops.length > 0 && (
+          <div>
+            <ul className="trip-outline">
+              {stops.map((s) => (
+                <li key={s.destination}>
+                  <span>{byslug.get(s.destination)?.name ?? s.destination}</span>
+                  <span className="muted">
+                    {s.nights} night{s.nights > 1 ? 's' : ''}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="muted" style={{ marginBottom: 16 }}>
+              {stops.reduce((n, s) => n + s.nights, 0) + 1} days · {adults + children} traveller
+              {adults + children > 1 ? 's' : ''} · {MONTHS[month - 1]} · {TIERS.find((t) => t.value === tier)?.label}
+            </p>
+            <p className="estimate-total" style={{ fontSize: '1.6rem' }}>Price on request</p>
+            <p className="muted small">
+              Every safari is tailor-made. Send us your plan and one of our experts will reply with a personal quote, usually within one working day.
+            </p>
+            {!showForm ? (
+              <button type="button" className="btn btn-primary" style={{ width: '100%' }} onClick={() => setShowForm(true)}>
+                Request my quote
+              </button>
+            ) : (
+              <EnquiryForm source="builder" trip={trip} compact />
+            )}
+          </div>
+        )}
         {error && <p className="notice notice-error">{error}</p>}
         {estimate && stops.length > 0 && (
           <div style={{ opacity: loading ? 0.5 : 1, transition: 'opacity .2s' }}>

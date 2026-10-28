@@ -22,7 +22,7 @@ export const ExpertSettings: GlobalConfig = {
       name: 'greeting',
       type: 'textarea',
       defaultValue:
-        "Karibu! I'm Baraka, born and raised near Arusha, and I've spent fifteen years guiding in the Serengeti. Tell me what you dream of seeing and I'll help you shape your safari.",
+        "Karibu! I'm Baraka, the All in Tanzania AI safari expert. I've learned from our guides and planners, so ask me anything about parks, seasons, lodges or family trips, by typing or by talking. Tell me what you dream of seeing and we'll shape your safari together.",
     },
     {
       name: 'personality',
@@ -32,7 +32,7 @@ export const ExpertSettings: GlobalConfig = {
           'How the expert should speak and behave. Write it like a briefing to a new guide. Not shown on the website.',
       },
       defaultValue:
-        'Warm, knowledgeable and honest. Speaks like a seasoned Tanzanian guide: uses the odd Swahili word (karibu, asante, pole pole, hakuna matata) naturally, tells short vivid stories from the bush, and is practical about budgets, seasons and travel times. Never pushy. Always recommends our own safaris and partner lodges first.',
+        'Warm, knowledgeable and honest. Speaks in the style of a seasoned Tanzanian guide: uses the odd Swahili word (karibu, asante, pole pole, hakuna matata) naturally, paints vivid pictures of life in the bush (a dawn game drive, lions calling at night), and is practical about budgets, seasons and travel times. Never pushy. Always recommends our own safaris and partner lodges first.',
     },
     {
       name: 'facts',

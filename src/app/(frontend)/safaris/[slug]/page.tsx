@@ -6,7 +6,7 @@ import React from 'react'
 import { TIER_LABEL } from '@/components/Cards'
 import { Img } from '@/components/Img'
 import { rel, usd } from '@/lib/format'
-import { findBySlug } from '@/lib/payload'
+import { findBySlug, getShowPrices } from '@/lib/payload'
 import type { Destination, Lodge } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SafariPage({ params }: Props) {
   const s = await findBySlug('itineraries', (await params).slug)
+  const showPrices = await getShowPrices()
   if (!s) notFound()
   const route = (s.days ?? [])
     .filter((day) => rel<Destination>(day.destination) && (day.nights ?? 0) > 0)
@@ -87,17 +88,17 @@ export default async function SafariPage({ params }: Props) {
                   <dd>{TIER_LABEL[s.tier]}</dd>
                 </>
               )}
-              {s.fromPrice ? (
-                <>
-                  <dt>From</dt>
-                  <dd style={{ fontSize: '1.6rem', fontFamily: 'var(--serif)' }}>
-                    {usd(s.fromPrice)} <small className="muted">per person</small>
-                  </dd>
-                </>
-              ) : null}
+              <dt>{showPrices && s.fromPrice ? 'From' : 'Price'}</dt>
+              {showPrices && s.fromPrice ? (
+                <dd style={{ fontSize: '1.6rem', fontFamily: 'var(--serif)' }}>
+                  {usd(s.fromPrice)} <small className="muted">per person</small>
+                </dd>
+              ) : (
+                <dd>On request</dd>
+              )}
             </dl>
             <Link href={`/plan?route=${route}&tier=${s.tier ?? 'classic'}`} className="btn btn-primary">
-              Customise & price this trip
+              {showPrices ? 'Customise & price this trip' : 'Customise this trip'}
             </Link>
             <Link href={`/expert?about=${encodeURIComponent(s.title)}`} className="btn btn-ghost">Ask our expert</Link>
           </aside>

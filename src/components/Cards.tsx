@@ -3,6 +3,7 @@ import React from 'react'
 
 import { Img } from '@/components/Img'
 import { rel, usd } from '@/lib/format'
+import { getShowPrices } from '@/lib/payload'
 import type { Destination, Itinerary, Lodge } from '@/payload-types'
 
 const TIER_LABEL: Record<string, string> = { comfort: 'Comfort', classic: 'Classic', luxury: 'Luxury' }
@@ -19,7 +20,8 @@ export function DestinationTile({ d, wide }: { d: Destination; wide?: boolean })
   )
 }
 
-export function SafariCard({ s }: { s: Itinerary }) {
+export async function SafariCard({ s }: { s: Itinerary }) {
+  const price = (await getShowPrices()) ? s.fromPrice : null
   return (
     <Link href={`/safaris/${s.slug}`} className="card">
       <div className="card-media">
@@ -32,8 +34,8 @@ export function SafariCard({ s }: { s: Itinerary }) {
         <h3>{s.title}</h3>
         <p>{s.summary}</p>
         <div className="card-meta">
-          <span>{s.fromPrice ? 'From, per person' : 'Tailor-made'}</span>
-          {s.fromPrice ? <strong>{usd(s.fromPrice)}</strong> : <span className="link-arrow">View</span>}
+          <span>{price ? 'From, per person' : 'Tailor-made · price on request'}</span>
+          {price ? <strong>{usd(price)}</strong> : <span className="link-arrow">View</span>}
         </div>
       </div>
     </Link>

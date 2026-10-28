@@ -190,7 +190,7 @@ async function run() {
         expertBanner: {
           heading: 'Plan with Baraka, day or night',
           body:
-            'Our AI safari expert knows our parks, camps, seasons and prices. Ask anything, type or talk, and get an instant estimate. When you are ready, one of our team takes over personally.',
+            'Our AI safari expert has learned from our guides and planners and knows our parks, camps and seasons. Ask anything, type or talk, and shape your trip together. When you are ready, one of our team takes over personally.',
           image: m('bush-picnic'),
         },
       },

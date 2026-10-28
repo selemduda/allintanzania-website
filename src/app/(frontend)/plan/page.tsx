@@ -3,12 +3,12 @@ import React from 'react'
 
 import { TripBuilder, type BuilderDestination } from '@/components/TripBuilder'
 import { mediaPath } from '@/lib/format'
-import { getPayloadClient } from '@/lib/payload'
+import { getPayloadClient, getShowPrices } from '@/lib/payload'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Build your dream safari',
-  description: 'Choose your parks, nights and style of lodge and get an instant price estimate.',
+  description: 'Choose your parks, nights and style of lodge, and our experts send you a tailor-made quote.',
 }
 
 type Props = { searchParams: Promise<{ add?: string; route?: string; tier?: string }> }
@@ -16,6 +16,7 @@ type Props = { searchParams: Promise<{ add?: string; route?: string; tier?: stri
 export default async function PlanPage({ searchParams }: Props) {
   const params = await searchParams
   const payload = await getPayloadClient()
+  const showPrices = await getShowPrices()
   const { docs } = await payload.find({
     collection: 'destinations',
     where: { _status: { equals: 'published' } },
@@ -53,7 +54,7 @@ export default async function PlanPage({ searchParams }: Props) {
         <span className="eyebrow">Trip builder</span>
         <h1>Build your dream safari</h1>
         <p className="lead">
-          Pick the places you want to see, how long to stay and how you like to sleep. Your estimate updates as you go, then one of our experts turns it into a real itinerary.
+          Pick the places you want to see, how long to stay and how you like to sleep. {showPrices ? 'Your estimate updates as you go, then one' : 'One'} of our experts then turns it into a real itinerary{showPrices ? '' : ' with a personal quote'}.
         </p>
       </section>
       <section className="container" style={{ paddingBottom: 110 }}>
@@ -61,6 +62,7 @@ export default async function PlanPage({ searchParams }: Props) {
           destinations={destinations}
           initialStops={initialStops}
           initialTier={tier as 'comfort' | 'classic' | 'luxury'}
+          showPrices={showPrices}
         />
       </section>
     </>
