@@ -19,10 +19,16 @@ export function Img({ media, size, fill = true, priority, sizes = '100vw', class
   if (!media || typeof media !== 'object' || !media.url) {
     return <div className={`img-fallback ${className ?? ''}`} aria-hidden />
   }
-  const variant = size ? media.sizes?.[size] : undefined
+  // Boxes crop with object-fit, so they need the whole photo: the fixed-size "card" and
+  // "thumbnail" variants are already centre-cropped and would be cropped a second time.
+  // The uncropped "hero" variant is used instead; next/image resizes it to `sizes`.
+  const variant = fill ? media.sizes?.hero : size ? media.sizes?.[size] : undefined
   const src = mediaPath(variant?.url || media.url)!
-  const focal =
-    media.focalX != null && media.focalY != null ? `${media.focalX}% ${media.focalY}%` : 'center'
+  // Payload stores 50/50 when no focal point was set. Most safari photos have people and
+  // animal heads above the middle, so lean the default crop upwards.
+  const hasFocal =
+    media.focalX != null && media.focalY != null && !(media.focalX === 50 && media.focalY === 50)
+  const focal = hasFocal ? `${media.focalX}% ${media.focalY}%` : '50% 30%'
   return (
     <Image
       src={src}
