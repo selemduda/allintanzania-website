@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import React from 'react'
 
+import { FamilyFilm } from '@/components/FamilyFilm'
 import { GalleryGrid, type GalleryPhoto } from '@/components/GalleryGrid'
 import { mediaPath } from '@/lib/format'
 import { getDict } from '@/lib/i18n'
@@ -64,6 +65,8 @@ export default async function GalleryPage({ params }: Props) {
         <p className="lead">{t.gallery.lead}</p>
       </section>
       <section className="container" style={{ paddingBottom: 100 }}>
+        <h2 className="gallery-heading">{t.home.filmHeading}</h2>
+        <FamilyFilm title={t.home.filmHeading} />
         {videos.length > 0 && (
           <>
             <h2 className="gallery-heading">{t.gallery.videos}</h2>
@@ -83,7 +86,6 @@ export default async function GalleryPage({ params }: Props) {
             <GalleryGrid photos={photos} labels={t.gallery} />
           </>
         )}
-        {!media.length && <p className="muted">{t.gallery.empty}</p>}
       </section>
     </>
   )

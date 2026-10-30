@@ -1546,3 +1546,12 @@ p {
 .lightbox-next {
   right: 12px;
 }
+
+.feature-film {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--night);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}

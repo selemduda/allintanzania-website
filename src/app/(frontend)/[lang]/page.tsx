@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { DestinationTile, SafariCard } from '@/components/Cards'
+import { FamilyFilm } from '@/components/FamilyFilm'
 import { HeroSlider } from '@/components/HeroSlider'
 import { Img } from '@/components/Img'
 import { rel } from '@/lib/format'
@@ -112,6 +113,20 @@ export default async function HomePage({ params }: Props) {
           </div>
         </section>
       )}
+
+      <section className="section section-sand">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <span className="eyebrow">{t.home.filmEyebrow}</span>
+              <h2>{t.home.filmHeading}</h2>
+              <p className="lead" style={{ maxWidth: '52ch' }}>{t.home.filmBody}</p>
+            </div>
+            <Link href={href('/plan')} className="link-arrow">{t.home.filmCta}</Link>
+          </div>
+          <FamilyFilm title={t.home.filmHeading} />
+        </div>
+      </section>
 
       {home.pillars && home.pillars.length > 0 && (
         <section className="section section-dark">

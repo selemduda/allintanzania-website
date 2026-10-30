@@ -96,6 +96,11 @@ const en = {
       'Ask anything: when to see the calving season, which camp suits young children, how long to stay in Ruaha. Type or simply talk, and shape your trip together.',
     startConversation: 'Start a conversation',
     buildMyTrip: 'Build my trip',
+    filmEyebrow: 'Safari with kids',
+    filmHeading: 'A family holiday in Tanzania',
+    filmBody:
+      'Lions in the trees, new Maasai friends and long days on the plains: a short film from one of our own family safaris.',
+    filmCta: 'Plan a family safari',
   },
   about: {
     title: 'About us',
@@ -365,6 +370,11 @@ const no: Dict = {
       'Spør om hva du vil: når kalvingssesongen er, hvilken leir som passer for små barn, hvor lenge du bør bli i Ruaha. Skriv eller bare snakk, og form reisen sammen.',
     startConversation: 'Start en samtale',
     buildMyTrip: 'Sett sammen reisen',
+    filmEyebrow: 'Safari med barn',
+    filmHeading: 'Familieferie i Tanzania',
+    filmBody:
+      'Løver i trærne, nye maasai-venner og lange dager på slettene: en kort film fra en av våre egne familiesafarier.',
+    filmCta: 'Planlegg familiesafari',
   },
   about: {
     title: 'Om oss',
