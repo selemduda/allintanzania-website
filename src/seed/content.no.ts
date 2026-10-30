@@ -358,15 +358,15 @@ export const itinerariesNo: Record<
   'Kigoma Family Self-Drive Adventure': {
     title: 'Kigoma: familieeventyr med egen bil',
     summary:
-      'Sett deg bak rattet i vår egen Toyota Land Cruiser med dobbelthytte (automat) og kjør familien tvers over Tanzania: elefantene i Mikumi, det sørlige høylandet, strendene ved Tanganyikasjøen og sjimpansene i Gombe, og hjem via Tabora og Dodoma. Vi planlegger ruten og bestiller overnattingene; dere bestemmer tempoet.',
+      'Sett deg bak rattet i vår egen Toyota Land Cruiser med dobbelthytte (automat) og kjør familien tvers over Tanzania: elefantene i Mikumi, det sørlige høylandet, Kigoma ved Tanganyikasjøen og sjimpansene i Gombe, og hjem via Mpanda, Tabora og Dodoma. Vi planlegger ruten og bestiller overnattingene; dere bestemmer tempoet.',
     days: [
       { dayRange: 'Dag 1–2', title: 'Hent Land Cruiseren og kjør til Mikumi', description: 'Vi overleverer Land Cruiseren i Dar es Salaam med en grundig gjennomgang av bilen, ruten og trafikkreglene. Kjør vestover via Morogoro og Uluguru-fjellene til Mikumi for de første safariturene blant elefanter, sjiraffer og sebraer.' },
       { dayRange: 'Dag 3–4', title: 'Opp til Iringa', description: 'Klatre gjennom Ruaha-dalen full av baobabtrær til den kjølige byen Iringa. Besøk steinalderstedet Isimila og det yrende markedet, eller legg inn en avstikker til Ruaha nasjonalpark.' },
       { dayRange: 'Dag 5', title: 'Det sørlige høylandet til Mbeya', description: 'Grønt te- og kaffeland hele veien til Mbeya. Overnatting på en kaffefarm i drift like utenfor byen.' },
       { dayRange: 'Dag 6', title: 'Sumbawanga', description: 'En rolig kjøretur over Ufipa-platået til Sumbawanga, den siste byen før sjøen. Fyll tanken og kjøleboksen her.' },
-      { dayRange: 'Dag 7–10', title: 'Strandliv ved Tanganyikasjøen', description: 'Kjør ned skråningen til sjøen ved Kipili. Fire netter med bading, kajakk, snorkling blant ciklider og båttur til øyene mens bilen hviler.' },
-      { dayRange: 'Dag 11', title: 'Fosser på vei nordover', description: 'Følg sjøen nordover mot Mpanda, med stopp ved en foss og overnatting i en enkel leir. En fin dag for å se dyr i utkanten av Katavi.' },
-      { dayRange: 'Dag 12–14', title: 'Kigoma og sjimpansene i Gombe', description: 'Bo på stranden i Kigoma. Ta båten opp sjøen til Gombe Stream for å gå med sjimpansene, besøk Livingstone-minnesmerket i Ujiji og se fiskebåtene dra ut i solnedgangen.' },
+      { dayRange: 'Dag 7–9', title: 'Nordover til Kigoma og Tanganyikasjøen', description: 'En lang og vakker kjøretur nordover fra Sumbawanga gjennom miombo-skog og røde jordveier, ned til Kigoma ved bredden av Tanganyikasjøen. Bo på en strandlodge og nyt to rolige dager med bading, kajakk og solnedgang over fjellene i Kongo.' },
+      { dayRange: 'Dag 10–12', title: 'Sjimpansene i Gombe', description: 'Ta båten opp sjøen til Gombe Stream for å gå med sjimpansene, besøk Livingstone-minnesmerket i Ujiji og se fiskebåtene dra ut i skumringen.' },
+      { dayRange: 'Dag 13–14', title: 'Sørover til Mpanda og Katavi', description: 'Kjør sørover til Mpanda, porten til Katavi nasjonalpark. Bruk en dag på å se etter de store bøffelflokkene og flodhestene i en av Tanzanias villeste parker, eller hvil i byen.' }
       { dayRange: 'Dag 15', title: 'Østover til Tabora', description: 'En lang kjøretur østover gjennom miombo-skog til Tabora, en gammel karavaneby med mangoalleer og historier fra slave- og elfenbensrutene.' },
       { dayRange: 'Dag 16–17', title: 'Dodoma', description: 'Fortsett til Dodoma, Tanzanias hovedstad. Hvil, besøk vingårdene rundt byen og nyt en familiemiddag etter to uker på veien.' },
       { dayRange: 'Dag 18', title: 'Tilbake til Dar es Salaam', description: 'Kjør den siste etappen til Dar es Salaam og lever Land Cruiseren.' },
