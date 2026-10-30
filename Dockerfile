@@ -25,7 +25,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Uploaded photos and price lists when DigitalOcean Spaces is not configured
-RUN mkdir -p media private/price-lists && chown -R nextjs:nodejs media private
+RUN mkdir -p media private/price-lists .next/cache && chown -R nextjs:nodejs media private .next/cache
 USER nextjs
 EXPOSE 3000
 CMD ["node", "server.js"]

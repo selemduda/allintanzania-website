@@ -27,6 +27,8 @@ services:
     volumes:
       - media:/app/media
       - private:/app/private
+      # Resized images survive restarts and rebuilds, so they are only made once.
+      - next-cache:/app/.next/cache
     depends_on:
       db:
         condition: service_healthy
@@ -65,6 +67,7 @@ services:
       - app
 
 volumes:
+  next-cache:
   pgdata:
   media:
   private:
