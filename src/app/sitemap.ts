@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayloadClient()
   const pages: { path: string; priority: number; lastModified?: string }[] = [
     { path: '/', priority: 1 },
-    ...['/about', '/plan', '/expert', '/contact'].map((path) => ({ path, priority: 0.6 })),
+    ...['/about', '/gallery', '/plan', '/expert', '/contact'].map((path) => ({ path, priority: 0.6 })),
   ]
   for (const { collection, path } of SECTIONS) {
     pages.push({ path, priority: 0.8 })

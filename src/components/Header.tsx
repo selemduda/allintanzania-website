@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 
 import { getDict, localePath, stripLang, type Lang } from '@/lib/i18n'
 
-const NAV = ['destinations', 'safaris', 'lodges', 'journal', 'about', 'contact'] as const
+const NAV = ['destinations', 'safaris', 'lodges', 'journal', 'gallery', 'about', 'contact'] as const
 
 const HERO_PAGES = /^\/(about|(destinations|safaris|lodges|journal)\/[^/]+)?$/
 

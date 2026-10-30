@@ -26,6 +26,7 @@ export async function Footer({ lang }: { lang: Lang }) {
             <li><Link href={href('/safaris')}>{t.nav.safaris}</Link></li>
             <li><Link href={href('/lodges')}>{t.nav.lodges}</Link></li>
             <li><Link href={href('/journal')}>{t.nav.journal}</Link></li>
+            <li><Link href={href('/gallery')}>{t.nav.gallery}</Link></li>
           </ul>
         </div>
         <div>

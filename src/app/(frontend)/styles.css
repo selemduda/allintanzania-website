@@ -1433,3 +1433,116 @@ p {
     --header-h: 80px;
   }
 }
+
+/* Gallery */
+.gallery-heading {
+  margin: 40px 0 20px;
+}
+.gallery-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.gallery-videos figure {
+  margin: 0;
+}
+.gallery-videos video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--night);
+  border-radius: var(--radius);
+  object-fit: cover;
+}
+.gallery-videos figcaption,
+.lightbox figcaption {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+.gallery-grid {
+  columns: 3 280px;
+  column-gap: 16px;
+}
+.gallery-item {
+  display: block;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  border-radius: var(--radius);
+  overflow: hidden;
+  break-inside: avoid;
+}
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.6s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.03);
+}
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(20, 28, 22, 0.94);
+}
+.lightbox::backdrop {
+  background: transparent;
+}
+.lightbox figure {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 64px;
+  pointer-events: none;
+}
+.lightbox figure img {
+  max-width: 100%;
+  max-height: calc(100dvh - 140px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.lightbox figcaption {
+  color: rgba(255, 255, 255, 0.75);
+}
+.lightbox button {
+  position: fixed;
+  border: 0;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+.lightbox-close {
+  top: 16px;
+  right: 16px;
+}
+.lightbox-prev,
+.lightbox-next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.lightbox-prev {
+  left: 12px;
+}
+.lightbox-next {
+  right: 12px;
+}
