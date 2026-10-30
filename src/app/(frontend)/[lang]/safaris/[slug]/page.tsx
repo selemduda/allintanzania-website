@@ -4,11 +4,11 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 
 import { Img } from '@/components/Img'
-import { rel, usd } from '@/lib/format'
+import { mediaPath, rel, usd } from '@/lib/format'
 import { getDict, localePath } from '@/lib/i18n'
 import { pageLang } from '@/lib/pageLang'
 import { findBySlug, getShowPrices } from '@/lib/payload'
-import type { Destination, Lodge } from '@/payload-types'
+import type { Destination, Lodge, Media } from '@/payload-types'
 import { jsonLd, pageMeta, shareImage, siteUrl } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
@@ -27,6 +27,8 @@ export default async function SafariPage({ params }: Props) {
   const s = await findBySlug('itineraries', (await params).slug, lang)
   const showPrices = await getShowPrices()
   if (!s) notFound()
+  const video = rel<Media>(s.video)
+  const poster = rel<Media>(s.heroImage)
   const route = (s.days ?? [])
     .filter((day) => rel<Destination>(day.destination) && (day.nights ?? 0) > 0)
     .map((day) => `${rel<Destination>(day.destination)!.slug}:${day.nights}`)
@@ -68,6 +70,17 @@ export default async function SafariPage({ params }: Props) {
         <div className="container detail-grid">
           <div>
             <p className="lead">{s.summary}</p>
+            {video?.url && (
+              <video
+                className="trip-video"
+                src={mediaPath(video.url)!}
+                poster={mediaPath(poster?.sizes?.hero?.url || poster?.url) ?? undefined}
+                controls
+                playsInline
+                preload="metadata"
+                aria-label={video.alt ?? undefined}
+              />
+            )}
             <h2 style={{ marginTop: 48 }}>{t.safaris.dayByDay}</h2>
             <ol className="timeline">
               {(s.days ?? []).map((day) => {
@@ -102,6 +115,15 @@ export default async function SafariPage({ params }: Props) {
                 )}
               </div>
             ) : null}
+            {s.gallery && s.gallery.length > 0 && (
+              <div className="gallery" style={{ marginTop: 40 }}>
+                {s.gallery.map((m, i) => (
+                  <div key={typeof m === 'object' ? m.id : i}>
+                    <Img media={m} size="card" sizes="33vw" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <aside className="detail-aside">
             <dl>

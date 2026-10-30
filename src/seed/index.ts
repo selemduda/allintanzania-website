@@ -53,8 +53,8 @@ async function seedMedia(payload: Payload) {
       .map((line) => line.split(' <- Dropbox: ')),
   )
   const ids: Record<string, number> = {}
-  for (const file of fs.readdirSync(mediaDir).filter((f) => f.endsWith('.jpg'))) {
-    const key = file.replace(/\.jpg$/, '')
+  for (const file of fs.readdirSync(mediaDir).filter((f) => /\.(jpg|mp4)$/.test(f))) {
+    const key = file.replace(/\.(jpg|mp4)$/, '')
     const existing = await payload.find({ collection: 'media', where: { filename: { equals: file } }, limit: 1 })
     if (existing.docs[0]) {
       ids[key] = existing.docs[0].id
@@ -238,6 +238,8 @@ async function run() {
         tier: s.tier,
         styles: s.styles,
         heroImage: m(s.hero),
+        gallery: s.gallery?.map(m).filter(Boolean),
+        video: s.video ? m(s.video) : undefined,
         summary: s.summary,
         days: s.days.map((day) => ({
           dayRange: day.dayRange,

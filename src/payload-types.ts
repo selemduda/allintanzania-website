@@ -359,8 +359,24 @@ export interface Itinerary {
    */
   fromPrice?: number | null;
   styles?:
-    ('migration' | 'classic' | 'beach' | 'honeymoon' | 'family' | 'kilimanjaro' | 'walking' | 'cultural')[] | null;
+    | (
+        | 'migration'
+        | 'classic'
+        | 'beach'
+        | 'honeymoon'
+        | 'family'
+        | 'kilimanjaro'
+        | 'walking'
+        | 'cultural'
+        | 'selfdrive'
+      )[]
+    | null;
   heroImage?: (number | null) | Media;
+  /**
+   * Short MP4 clip from the trip, shown above the day-by-day. Keep it under 50 MB.
+   */
+  video?: (number | null) | Media;
+  gallery?: (number | Media)[] | null;
   summary: string;
   days?:
     | {
@@ -766,6 +782,8 @@ export interface ItinerariesSelect<T extends boolean = true> {
   fromPrice?: T;
   styles?: T;
   heroImage?: T;
+  video?: T;
+  gallery?: T;
   summary?: T;
   days?:
     | T

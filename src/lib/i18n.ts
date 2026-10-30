@@ -56,6 +56,7 @@ const en = {
     kilimanjaro: 'Kilimanjaro Trek',
     walking: 'Walking & Wilderness',
     cultural: 'Cultural',
+    selfdrive: 'Self-drive',
   } as Record<string, string>,
   regions: {
     '': 'All',
@@ -309,6 +310,7 @@ const no: Dict = {
     kilimanjaro: 'Kilimanjaro-bestigning',
     walking: 'Gåsafari og villmark',
     cultural: 'Kultur',
+    selfdrive: 'Selvkjøring',
   },
   regions: {
     '': 'Alle',

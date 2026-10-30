@@ -265,6 +265,44 @@ export const destinations: SeedDestination[] = [
     bestMonths: ['Jan', 'Feb', 'Oct', 'Nov', 'Dec'],
     recommendedNights: 3,
   },
+  {
+    slug: 'lake-tanganyika',
+    name: 'Lake Tanganyika',
+    region: 'southern',
+    type: 'beach',
+    order: 120,
+    tagline: 'Africa’s longest lake, with beaches to match',
+    hero: 'all-in-tanzania-safari-vehicle',
+    summary:
+      'The longest freshwater lake in the world, on Tanzania’s far western border. Clear water, sandy coves, fishing villages and hardly another tourist: a place where families can slow down after days on the road.',
+    body: [
+      'The southern shore around Kipili is reached by road from Sumbawanga and has a handful of small, family-run lodges with kayaks, snorkelling among colourful cichlid fish and dhow trips to the islands.',
+      'Further north the lake leads to Kigoma, Ujiji and the chimpanzees of Gombe. Driving the lake shore is one of the great road trips in East Africa.',
+    ],
+    highlights: ['Kayaking and snorkelling among cichlid fish', 'Sunsets over the mountains of Congo', 'Quiet beaches and fishing villages'],
+    bestMonths: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Dec', 'Jan'],
+    recommendedNights: 3,
+  },
+  {
+    slug: 'gombe',
+    name: 'Kigoma & Gombe',
+    region: 'southern',
+    type: 'park',
+    order: 125,
+    tagline: 'Chimpanzees on the shore of Lake Tanganyika',
+    hero: 'all-in-tanzania-safari-vehicle',
+    summary:
+      'Gombe Stream is where Jane Goodall began her chimpanzee research in 1960. The park is reached by boat from Kigoma, the lively lake port that is also home to Ujiji, where Stanley met Livingstone.',
+    body: [
+      'There are no roads in Gombe. You arrive by lake taxi or private boat, then walk forest trails with a ranger to find the chimpanzee families that have been studied for more than sixty years.',
+      'Kigoma itself is a relaxed town with beach hotels, fish markets and the Livingstone memorial in Ujiji, so there is plenty for children who are too young to join the chimpanzee trek.',
+    ],
+    highlights: ['Chimpanzee trekking with park rangers', 'Boat ride along the lake to the park', 'Livingstone memorial in Ujiji', 'Swimming and sunsets on the beaches of Kigoma'],
+    wildlife: ['Chimpanzee', 'Olive baboon', 'Red-tailed monkey', 'Red colobus'],
+    bestMonths: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Dec', 'Jan'],
+    recommendedNights: 3,
+    expertNotes: 'Gombe sets a minimum age for chimpanzee trekking (check the current rule with the team), so younger children stay in Kigoma with one parent. Long trousers and closed shoes for the forest. The road from Kigoma to Tabora and the lake-shore road can be slow in the long rains (March to May).',
+  },
 ]
 
 export type SeedLodge = {
@@ -399,6 +437,9 @@ export type SeedItinerary = {
   tier: 'comfort' | 'classic' | 'luxury'
   styles: string[]
   hero: string
+  gallery?: string[]
+  /** Key of an .mp4 file in ./media. */
+  video?: string
   summary: string
   days: { dayRange: string; title: string; destination?: string; lodge?: string; nights: number; description: string }[]
   included: string[]
@@ -518,6 +559,35 @@ export const itineraries: SeedItinerary[] = [
     ],
     included: ['Accommodation and meals', 'Green fees for one round', 'Private safari vehicle and guide', 'Park fees', 'Transfers'],
     excluded: standardExcluded,
+  },
+  {
+    title: 'Kigoma Family Self-Drive Adventure',
+    durationDays: 18,
+    tier: 'comfort',
+    styles: ['selfdrive', 'family', 'cultural'],
+    hero: 'all-in-tanzania-safari-vehicle',
+    summary:
+      'Take the wheel of our own Toyota Land Cruiser double cabin (automatic) and drive your family across Tanzania: Mikumi’s elephants, the Southern Highlands, the beaches of Lake Tanganyika and the chimpanzees of Gombe, then home through Tabora and Dodoma. We plan the route and book the stays; you set the pace.',
+    days: [
+      { dayRange: 'Days 1–2', title: 'Collect your Land Cruiser and head for Mikumi', destination: 'mikumi', nights: 2, description: 'We hand over the Land Cruiser in Dar es Salaam with a full briefing on the car, the route and the road rules. Drive west via Morogoro and the Uluguru Mountains to Mikumi for your first game drives among elephants, giraffe and zebra.' },
+      { dayRange: 'Days 3–4', title: 'Up to Iringa', nights: 2, description: 'Climb through the baobab-filled Ruaha valley to the cool town of Iringa. Visit the Isimila Stone Age site and the busy market, or add a detour to Ruaha National Park.' },
+      { dayRange: 'Day 5', title: 'The Southern Highlands to Mbeya', nights: 1, description: 'Green tea and coffee country all the way to Mbeya. Stay on a working coffee farm near the town.' },
+      { dayRange: 'Day 6', title: 'Sumbawanga', nights: 1, description: 'A quiet drive across the Ufipa Plateau to Sumbawanga, the last town before the lake. Fill up the tank and the cool box here.' },
+      { dayRange: 'Days 7–10', title: 'Beach days on Lake Tanganyika', destination: 'lake-tanganyika', nights: 4, description: 'Drop down the escarpment to the lake shore near Kipili. Four nights to swim, kayak, snorkel with cichlid fish and take a boat to the islands while the car rests.' },
+      { dayRange: 'Day 11', title: 'Waterfalls on the way north', nights: 1, description: 'Follow the lake north towards Mpanda, with a stop at a waterfall and an overnight at a simple camp. A good day to spot wildlife on the edge of Katavi.' },
+      { dayRange: 'Days 12–14', title: 'Kigoma and the chimpanzees of Gombe', destination: 'gombe', nights: 3, description: 'Base yourselves on the beach in Kigoma. Take a boat up the lake to Gombe Stream to trek with the chimpanzees, visit the Livingstone memorial in Ujiji and watch the fishing boats go out at sunset.' },
+      { dayRange: 'Day 15', title: 'East to Tabora', nights: 1, description: 'A long drive east through miombo woodland to Tabora, an old caravan town with mango-lined avenues and stories from the slave and ivory trade routes.' },
+      { dayRange: 'Days 16–17', title: 'Dodoma', nights: 2, description: 'Continue to Dodoma, Tanzania’s capital. Rest, visit the vineyards around the city and enjoy a family dinner after two weeks on the road.' },
+      { dayRange: 'Day 18', title: 'Back to Dar es Salaam', nights: 0, description: 'Drive the final stretch to Dar es Salaam and hand back the Land Cruiser.' },
+    ],
+    included: [
+      'Toyota Land Cruiser double cabin, automatic, for the whole trip',
+      'Route plan and day-by-day driving notes',
+      'Handover briefing in Dar es Salaam',
+      'Booking of lodges and campsites along the route',
+      'Phone support from our team while you drive',
+    ],
+    excluded: [...standardExcluded, 'Fuel', 'Accommodation and meals (quoted separately, depending on where you choose to stay)', 'Park fees and the Gombe boat and chimpanzee trek', 'International driving permit'],
   },
 ]
 

@@ -13,6 +13,7 @@ export const TRIP_STYLES = [
   { label: 'Kilimanjaro Trek', value: 'kilimanjaro' },
   { label: 'Walking & Wilderness', value: 'walking' },
   { label: 'Cultural', value: 'cultural' },
+  { label: 'Self-drive', value: 'selfdrive' },
 ]
 
 export const Itineraries: CollectionConfig = {
@@ -47,6 +48,14 @@ export const Itineraries: CollectionConfig = {
     },
     { name: 'styles', type: 'select', hasMany: true, options: TRIP_STYLES },
     { name: 'heroImage', type: 'upload', relationTo: 'media' },
+    {
+      name: 'video',
+      type: 'upload',
+      relationTo: 'media',
+      filterOptions: { mimeType: { contains: 'video/' } },
+      admin: { description: 'Short MP4 clip from the trip, shown above the day-by-day. Keep it under 50 MB.' },
+    },
+    { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
     { name: 'summary', type: 'textarea', localized: true, required: true },
     {
       name: 'days',

@@ -182,6 +182,29 @@ export const destinationsNo: Record<
     ],
     highlights: ['Hvalhaier (omtrent oktober til mars)', 'Korallrevene i Mafia Island Marine Park', 'Rolige strender og små lodger'],
   },
+  'lake-tanganyika': {
+    name: 'Tanganyikasjøen',
+    tagline: 'Afrikas lengste innsjø, med strender som passer',
+    summary:
+      'Verdens lengste ferskvannssjø, helt vest i Tanzania. Klart vann, sandviker, fiskelandsbyer og nesten ingen andre turister: et sted der familien kan senke tempoet etter mange dager på veien.',
+    body: [
+      'Sørbredden rundt Kipili nås med bil fra Sumbawanga og har en håndfull små, familiedrevne lodger med kajakk, snorkling blant fargerike ciklider og dhowturer ut til øyene.',
+      'Lenger nord leder sjøen til Kigoma, Ujiji og sjimpansene i Gombe. Å kjøre langs sjøen er en av de store bilturene i Øst-Afrika.',
+    ],
+    highlights: ['Kajakk og snorkling blant ciklider', 'Solnedganger over fjellene i Kongo', 'Rolige strender og fiskelandsbyer'],
+  },
+  gombe: {
+    name: 'Kigoma og Gombe',
+    tagline: 'Sjimpanser ved bredden av Tanganyikasjøen',
+    summary:
+      'Gombe Stream er der Jane Goodall startet sjimpanseforskningen sin i 1960. Parken nås med båt fra Kigoma, den livlige havnebyen ved sjøen som også rommer Ujiji, der Stanley møtte Livingstone.',
+    body: [
+      'Det finnes ingen veier i Gombe. Du kommer med sjøtaxi eller privat båt, og går skogstier med en ranger for å finne sjimpansefamiliene som er blitt fulgt i over seksti år.',
+      'Kigoma er en avslappet by med strandhoteller, fiskemarkeder og Livingstone-minnesmerket i Ujiji, så det er mye å gjøre for barn som er for unge til sjimpansevandringen.',
+    ],
+    highlights: ['Sjimpansevandring med parkens rangere', 'Båttur langs sjøen til parken', 'Livingstone-minnesmerket i Ujiji', 'Bading og solnedganger på strendene i Kigoma'],
+    wildlife: ['Sjimpanse', 'Olivenbavian', 'Rødhalet marekatt', 'Rød colobus'],
+  },
 }
 
 export const lodgesNo: Record<string, { summary: string; amenities: string[] }> = {
@@ -331,6 +354,37 @@ export const itinerariesNo: Record<
     ],
     included: ['Overnatting og måltider', 'Greenfee for én runde', 'Privat safaribil og guide', 'Parkavgifter', 'Transport'],
     excluded: standardExcluded,
+  },
+  'Kigoma Family Self-Drive Adventure': {
+    title: 'Kigoma: familieeventyr med egen bil',
+    summary:
+      'Sett deg bak rattet i vår egen Toyota Land Cruiser med dobbelthytte (automat) og kjør familien tvers over Tanzania: elefantene i Mikumi, det sørlige høylandet, strendene ved Tanganyikasjøen og sjimpansene i Gombe, og hjem via Tabora og Dodoma. Vi planlegger ruten og bestiller overnattingene; dere bestemmer tempoet.',
+    days: [
+      { dayRange: 'Dag 1–2', title: 'Hent Land Cruiseren og kjør til Mikumi', description: 'Vi overleverer Land Cruiseren i Dar es Salaam med en grundig gjennomgang av bilen, ruten og trafikkreglene. Kjør vestover via Morogoro og Uluguru-fjellene til Mikumi for de første safariturene blant elefanter, sjiraffer og sebraer.' },
+      { dayRange: 'Dag 3–4', title: 'Opp til Iringa', description: 'Klatre gjennom Ruaha-dalen full av baobabtrær til den kjølige byen Iringa. Besøk steinalderstedet Isimila og det yrende markedet, eller legg inn en avstikker til Ruaha nasjonalpark.' },
+      { dayRange: 'Dag 5', title: 'Det sørlige høylandet til Mbeya', description: 'Grønt te- og kaffeland hele veien til Mbeya. Overnatting på en kaffefarm i drift like utenfor byen.' },
+      { dayRange: 'Dag 6', title: 'Sumbawanga', description: 'En rolig kjøretur over Ufipa-platået til Sumbawanga, den siste byen før sjøen. Fyll tanken og kjøleboksen her.' },
+      { dayRange: 'Dag 7–10', title: 'Strandliv ved Tanganyikasjøen', description: 'Kjør ned skråningen til sjøen ved Kipili. Fire netter med bading, kajakk, snorkling blant ciklider og båttur til øyene mens bilen hviler.' },
+      { dayRange: 'Dag 11', title: 'Fosser på vei nordover', description: 'Følg sjøen nordover mot Mpanda, med stopp ved en foss og overnatting i en enkel leir. En fin dag for å se dyr i utkanten av Katavi.' },
+      { dayRange: 'Dag 12–14', title: 'Kigoma og sjimpansene i Gombe', description: 'Bo på stranden i Kigoma. Ta båten opp sjøen til Gombe Stream for å gå med sjimpansene, besøk Livingstone-minnesmerket i Ujiji og se fiskebåtene dra ut i solnedgangen.' },
+      { dayRange: 'Dag 15', title: 'Østover til Tabora', description: 'En lang kjøretur østover gjennom miombo-skog til Tabora, en gammel karavaneby med mangoalleer og historier fra slave- og elfenbensrutene.' },
+      { dayRange: 'Dag 16–17', title: 'Dodoma', description: 'Fortsett til Dodoma, Tanzanias hovedstad. Hvil, besøk vingårdene rundt byen og nyt en familiemiddag etter to uker på veien.' },
+      { dayRange: 'Dag 18', title: 'Tilbake til Dar es Salaam', description: 'Kjør den siste etappen til Dar es Salaam og lever Land Cruiseren.' },
+    ],
+    included: [
+      'Toyota Land Cruiser med dobbelthytte, automat, for hele turen',
+      'Ruteplan og kjørenotater dag for dag',
+      'Gjennomgang av bilen ved overlevering i Dar es Salaam',
+      'Bestilling av lodger og campingplasser langs ruten',
+      'Telefonstøtte fra teamet vårt mens dere kjører',
+    ],
+    excluded: [
+      ...standardExcluded,
+      'Drivstoff',
+      'Overnatting og måltider (prises separat, avhengig av hvor dere vil bo)',
+      'Parkavgifter og båt og sjimpansevandring i Gombe',
+      'Internasjonalt førerkort',
+    ],
   },
 }
 
