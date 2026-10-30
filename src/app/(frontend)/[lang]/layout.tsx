@@ -46,7 +46,7 @@ export default async function RootLayout({ children, params }: Props) {
     logo: `${siteUrl()}/favicon.png`,
     email: site.email || undefined,
     telephone: site.phone || undefined,
-    address: site.address || undefined,
+    address: [site.address, site.addressTanzania].filter(Boolean).map((a) => a!.replace(/\n/g, ', ')),
     areaServed: ['Norway', 'Sweden', 'Denmark', 'Tanzania'],
     sameAs: (site.social ?? []).map((s) => s.url),
   }

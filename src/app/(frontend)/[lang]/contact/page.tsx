@@ -42,7 +42,8 @@ export default async function ContactPage({ params }: Props) {
                 <dd><a href={`https://wa.me/${site.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">{site.whatsapp}</a></dd>
               </>
             )}
-            {site.address && (<><dt>{t.office}</dt><dd style={{ whiteSpace: 'pre-line' }}>{site.address}</dd></>)}
+            {site.address && (<><dt>{t.officeNorway}</dt><dd style={{ whiteSpace: 'pre-line' }}>{site.address}</dd></>)}
+            {site.addressTanzania && (<><dt>{t.officeTanzania}</dt><dd style={{ whiteSpace: 'pre-line' }}>{site.addressTanzania}</dd></>)}
           </dl>
         </aside>
       </div>

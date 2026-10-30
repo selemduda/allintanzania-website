@@ -1060,6 +1060,7 @@ export interface SiteSetting {
    */
   whatsapp?: string | null;
   address?: string | null;
+  addressTanzania?: string | null;
   social?:
     | {
         platform: 'instagram' | 'facebook' | 'youtube' | 'tiktok' | 'tripadvisor' | 'linkedin' | 'x';
@@ -1224,6 +1225,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   phone?: T;
   whatsapp?: T;
   address?: T;
+  addressTanzania?: T;
   social?:
     | T
     | {

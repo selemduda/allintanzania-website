@@ -108,10 +108,12 @@ const en = {
     description: 'Talk to our safari experts in Norway and Tanzania about your tailor-made Tanzania safari.',
     eyebrow: 'Contact',
     heading: 'Let’s plan your safari',
-    lead: 'Tell us a little about your trip and a safari expert from our Arusha team will reply personally.',
+    lead: 'Tell us a little about your trip and one of our safari experts in Norway or Tanzania will reply personally.',
     email: 'Email',
     phone: 'Phone',
     office: 'Office',
+    officeNorway: 'Norway office',
+    officeTanzania: 'Tanzania office',
   },
   destinations: {
     title: 'Destinations',
@@ -365,6 +367,8 @@ const no: Dict = {
     email: 'E-post',
     phone: 'Telefon',
     office: 'Kontor',
+    officeNorway: 'Kontor i Norge',
+    officeTanzania: 'Kontor i Tanzania',
   },
   destinations: {
     title: 'Reisemål i Tanzania',

@@ -84,7 +84,8 @@ export async function buildSystemPrompt(payload: Payload, showPrices: boolean) {
     site.email && `Email: ${site.email}`,
     site.phone && `Phone: ${site.phone}`,
     site.whatsapp && `WhatsApp: ${site.whatsapp}`,
-    site.address && `Office: ${site.address.replace(/\n/g, ', ')}`,
+    site.address && `Norway office: ${site.address.replace(/\n/g, ', ')}`,
+    site.addressTanzania && `Tanzania office: ${site.addressTanzania.replace(/\n/g, ', ')}`,
   ]
     .filter(Boolean)
     .join('\n')

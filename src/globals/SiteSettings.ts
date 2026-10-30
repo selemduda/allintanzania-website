@@ -17,7 +17,13 @@ export const SiteSettings: GlobalConfig = {
         { name: 'whatsapp', type: 'text', admin: { description: 'International format, e.g. +255712345678' } },
       ],
     },
-    { name: 'address', type: 'textarea' },
+    {
+      type: 'row',
+      fields: [
+        { name: 'address', label: 'Norway office', type: 'textarea' },
+        { name: 'addressTanzania', label: 'Tanzania office', type: 'textarea' },
+      ],
+    },
     {
       name: 'social',
       type: 'array',

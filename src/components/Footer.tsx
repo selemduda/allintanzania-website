@@ -49,7 +49,8 @@ export async function Footer({ lang }: { lang: Lang }) {
                 </a>
               </li>
             )}
-            {site.address && <li className="muted">{site.address}</li>}
+            {site.address && <li className="muted address">{site.address}</li>}
+            {site.addressTanzania && <li className="muted address">{site.addressTanzania}</li>}
           </ul>
           {site.social && site.social.length > 0 && (
             <div className="social">

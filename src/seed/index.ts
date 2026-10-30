@@ -312,9 +312,22 @@ async function run() {
         tagline: 'Your choice. Your holiday. Our mission.',
         email: 'info@allintanzania.com',
         phone: '+47 947 83 189',
-        address: 'St. Olavs gate 18B\n3110 Tønsberg, Norway',
+        address: 'Tønsberg, Vestfold\nNorway',
+        addressTanzania: 'Masaki, Chole Road Plaza, first floor\nP.O. Box 16348\nDar es Salaam, Tanzania',
         footerNote: 'Tailor-made safaris, Kilimanjaro climbs and beach holidays across Tanzania, planned by people who call it home.',
         enquiryRecipients: ['info@allintanzania.com'],
+      },
+    })
+  }
+
+  // Office addresses changed on 2026-10-30; update sites seeded with the old one.
+  const offices = await payload.findGlobal({ slug: 'site-settings' })
+  if (offices.address === 'St. Olavs gate 18B\n3110 Tønsberg, Norway' || !offices.addressTanzania) {
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: {
+        ...(offices.address === 'St. Olavs gate 18B\n3110 Tønsberg, Norway' && { address: 'Tønsberg, Vestfold\nNorway' }),
+        ...(!offices.addressTanzania && { addressTanzania: 'Masaki, Chole Road Plaza, first floor\nP.O. Box 16348\nDar es Salaam, Tanzania' }),
       },
     })
   }
