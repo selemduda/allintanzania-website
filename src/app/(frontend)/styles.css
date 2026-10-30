@@ -1,25 +1,26 @@
-/* All in Tanzania design tokens. Brand khaki comes from the leopard logo (#BDB18F). */
+/* All in Tanzania design tokens. Khaki comes from the leopard logo (#BDB18F); the cream,
+   forest green and gold are mixed in from the Sabi Sabi palette the brand asked to follow. */
 :root {
-  --sand: #f7f3ea;
-  --sand-deep: #ede5d3;
-  --paper: #fffdf8;
-  --ink: #221d16;
-  --ink-soft: #5b5246;
-  --muted: #8a7f6e;
+  --sand: #f7f0e3;
+  --sand-deep: #ede3cf;
+  --paper: #fdf9f1;
+  --ink: #23251c;
+  --ink-soft: #535443;
+  --muted: #847f6b;
   --khaki: #bdb18f;
-  --khaki-deep: #8f8463;
-  --ochre: #b0702c;
-  --ochre-deep: #8e5820;
-  --acacia: #4b5a3d;
-  --night: #16130f;
-  --line: rgba(34, 29, 22, 0.12);
+  --khaki-deep: #8a7f5c;
+  --ochre: #8a6322;
+  --ochre-deep: #6e4e1a;
+  --acacia: #24402a;
+  --night: #1b2a1f;
+  --line: rgba(35, 37, 28, 0.12);
   --radius: 14px;
   --radius-lg: 22px;
-  --shadow: 0 18px 40px -24px rgba(34, 29, 22, 0.45);
+  --shadow: 0 18px 40px -24px rgba(27, 42, 31, 0.45);
   --container: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
-  --serif: var(--font-serif), 'Cormorant Garamond', Georgia, serif;
-  --sans: var(--font-sans), 'Inter', system-ui, -apple-system, sans-serif;
+  --serif: var(--font-serif), 'Playfair Display', Georgia, serif;
+  --sans: var(--font-sans), 'Lato', system-ui, -apple-system, sans-serif;
 }
 
 *,
@@ -58,20 +59,20 @@ h2,
 h3,
 h4 {
   font-family: var(--serif);
-  font-weight: 500;
-  line-height: 1.1;
+  font-weight: 400;
+  line-height: 1.15;
   margin: 0 0 0.5em;
   letter-spacing: -0.01em;
 }
 
 h1 {
-  font-size: clamp(2.6rem, 6vw, 5rem);
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
 }
 h2 {
-  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-size: clamp(1.8rem, 3.4vw, 2.7rem);
 }
 h3 {
-  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
 }
 h4 {
   font-size: 1.15rem;
@@ -404,7 +405,7 @@ p {
 .img-fallback {
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 80% at 70% 20%, #e6b878 0%, #b0702c 35%, #4b3a24 75%, #1d1711 100%);
+  background: radial-gradient(120% 80% at 70% 20%, #d8c28a 0%, #be8e36 30%, #24402a 72%, #1b2a1f 100%);
 }
 
 /* Cards */
@@ -1422,4 +1423,7 @@ p {
 }
 .address {
   white-space: pre-line;
+}
+.site-footer .muted {
+  color: rgba(255, 255, 255, 0.7);
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Cormorant_Garamond, Inter } from 'next/font/google'
+import { Lato, Playfair_Display } from 'next/font/google'
 import React from 'react'
 
 import { ExpertLauncher } from '@/components/ExpertLauncher'
@@ -11,13 +11,14 @@ import { pageLang } from '@/lib/pageLang'
 import { indexable, jsonLd, siteUrl } from '@/lib/seo'
 import '../styles.css'
 
-const serif = Cormorant_Garamond({
+// Playfair Display and Lato, the pairing used by Sabi Sabi, which the brand asked to follow.
+const serif = Playfair_Display({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   style: ['normal', 'italic'],
   variable: '--font-serif',
 })
-const sans = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const sans = Lato({ subsets: ['latin'], weight: ['400', '700'], style: ['normal', 'italic'], variable: '--font-sans' })
 
 // A function, so the indexing switch is read when the site runs rather than when it is built.
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {

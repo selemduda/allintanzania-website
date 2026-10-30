@@ -1,0 +1,62 @@
+/* Admin colours: warm greys, the khaki of the leopard logo, and the gold and forest green
+   used on the public site. */
+:root {
+  --color-base-0: rgb(253, 252, 248);
+  --color-base-50: rgb(242, 241, 235);
+  --color-base-100: rgb(232, 230, 223);
+  --color-base-150: rgb(221, 219, 210);
+  --color-base-200: rgb(210, 207, 198);
+  --color-base-250: rgb(200, 196, 186);
+  --color-base-300: rgb(188, 185, 173);
+  --color-base-350: rgb(176, 173, 162);
+  --color-base-400: rgb(166, 162, 149);
+  --color-base-450: rgb(154, 150, 138);
+  --color-base-500: rgb(142, 139, 126);
+  --color-base-550: rgb(131, 127, 114);
+  --color-base-600: rgb(119, 115, 103);
+  --color-base-650: rgb(107, 104, 92);
+  --color-base-700: rgb(95, 92, 81);
+  --color-base-750: rgb(82, 79, 70);
+  --color-base-800: rgb(71, 68, 58);
+  --color-base-850: rgb(58, 56, 48);
+  --color-base-900: rgb(45, 43, 37);
+  --color-base-950: rgb(33, 32, 27);
+  --color-base-1000: rgb(20, 19, 16);
+  --color-success-500: rgb(36, 64, 42);
+  --aitz-bronze: #8a6322;
+  --aitz-bronze-deep: #6e4e1a;
+  --aitz-khaki: #bdb18f;
+}
+
+html[data-theme='light'] .btn--style-primary {
+  --bg-color: var(--aitz-bronze);
+  --hover-bg: var(--aitz-bronze-deep);
+  --color: #fff;
+  --hover-color: #fff;
+}
+
+html[data-theme='dark'] .btn--style-primary {
+  --bg-color: var(--aitz-khaki);
+  --hover-bg: #d3c9a8;
+  --color: #1b1a17;
+  --hover-color: #1b1a17;
+}
+
+.nav__link:hover,
+.nav__link.active {
+  color: var(--aitz-bronze);
+}
+html[data-theme='dark'] .nav__link:hover,
+html[data-theme='dark'] .nav__link.active {
+  color: var(--aitz-khaki);
+}
+
+.aitz-admin-logo {
+  max-width: 260px;
+  height: auto;
+}
+.aitz-admin-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}

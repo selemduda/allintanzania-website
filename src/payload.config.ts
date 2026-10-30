@@ -42,6 +42,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     components: {
+      graphics: {
+        Logo: '/components/admin/Brand#AdminLogo',
+        Icon: '/components/admin/Brand#AdminIcon',
+      },
       views: {
         dropboxImport: {
           Component: '/components/admin/DropboxImportView#DropboxImportView',

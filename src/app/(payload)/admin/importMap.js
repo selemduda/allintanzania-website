@@ -25,6 +25,8 @@ import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 import { FolderField as FolderField_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { DropboxImportLink as DropboxImportLink_ceb09ab67686e1e1a2cec335f7988508 } from '../../../components/admin/DropboxImportLink'
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { AdminIcon as AdminIcon_81fda60f3e3709e861f40982a767707d } from '../../../components/admin/Brand'
+import { AdminLogo as AdminLogo_81fda60f3e3709e861f40982a767707d } from '../../../components/admin/Brand'
 import { DropboxImportView as DropboxImportView_65a1bbca147136b38b4b7c7946873e6d } from '../../../components/admin/DropboxImportView'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -58,6 +60,8 @@ export const importMap = {
   "@payloadcms/next/rsc#FolderField": FolderField_f9c02e79a4aed9a3924487c0cd4cafb1,
   "/components/admin/DropboxImportLink#DropboxImportLink": DropboxImportLink_ceb09ab67686e1e1a2cec335f7988508,
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
+  "/components/admin/Brand#AdminIcon": AdminIcon_81fda60f3e3709e861f40982a767707d,
+  "/components/admin/Brand#AdminLogo": AdminLogo_81fda60f3e3709e861f40982a767707d,
   "/components/admin/DropboxImportView#DropboxImportView": DropboxImportView_65a1bbca147136b38b4b7c7946873e6d,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
