@@ -29,10 +29,10 @@
 }
 
 html[data-theme='light'] .btn--style-primary {
-  --bg-color: var(--aitz-bronze);
-  --hover-bg: var(--aitz-bronze-deep);
-  --color: #fff;
-  --hover-color: #fff;
+  --bg-color: var(--aitz-khaki);
+  --hover-bg: #a99c76;
+  --color: #1b1a17;
+  --hover-color: #1b1a17;
 }
 
 html[data-theme='dark'] .btn--style-primary {

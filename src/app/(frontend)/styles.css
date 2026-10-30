@@ -9,6 +9,7 @@
   --muted: #847f6b;
   --khaki: #bdb18f;
   --khaki-deep: #8a7f5c;
+  --khaki-hover: #a99c76;
   --ochre: #8a6322;
   --ochre-deep: #6e4e1a;
   --acacia: #24402a;
@@ -158,11 +159,11 @@ p {
   transform: translateY(-1px);
 }
 .btn-primary {
-  background: var(--ochre);
-  color: #fff;
+  background: var(--khaki);
+  color: var(--night);
 }
 .btn-primary:hover {
-  background: var(--ochre-deep);
+  background: var(--khaki-hover);
 }
 .btn-ghost {
   border-color: currentColor;
@@ -1042,9 +1043,9 @@ p {
   font-weight: 600;
 }
 .dest-chip.on .dest-chip-check {
-  background: var(--ochre);
-  border-color: var(--ochre);
-  color: #fff;
+  background: var(--khaki);
+  border-color: var(--khaki);
+  color: var(--night);
 }
 .route {
   list-style: none;
@@ -1377,9 +1378,9 @@ p {
   place-items: center;
 }
 .chat-mic.on {
-  background: var(--ochre);
-  color: #fff;
-  border-color: var(--ochre);
+  background: var(--khaki);
+  color: var(--night);
+  border-color: var(--khaki);
   animation: chat-pulse 1.2s ease-in-out infinite;
 }
 .chat-input .btn {
