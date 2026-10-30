@@ -40,10 +40,10 @@ export function Header({ lang }: { lang: Lang }) {
       <div className="container header-inner">
         <Link href={localePath(lang, '/')} className="brand" aria-label={t.nav.home}>
           <Image
-            src={solid ? '/brand/logo.png' : '/brand/logo-white.png'}
+            src={solid ? '/brand/logo-dark.png' : '/brand/logo-white.png'}
             alt="All in Tanzania"
-            width={150}
-            height={60}
+            width={220}
+            height={87}
             priority
           />
         </Link>
