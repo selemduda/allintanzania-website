@@ -54,8 +54,11 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    command: caddy reverse-proxy --from ${SITE_DOMAIN:?set SITE_DOMAIN in .env} --to app:3000
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?set SITE_DOMAIN in .env}
+      REDIRECT_DOMAINS: ${REDIRECT_DOMAINS:-redirect.localhost}
     volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy:/data
     depends_on:
       - app
