@@ -108,6 +108,19 @@ docker compose exec db pg_dump -U allintanzania allintanzania | gzip > backup-$(
 
 Photos live in the `media` Docker volume, or in Spaces if that is configured.
 
+## Gallery photos and video clips
+
+The Gallery page shows everything in the Media library's **Gallery** folder. To add a batch prepared on a computer (`photos/`, `videos/` and an optional `captions.csv` with the columns filename, alt, caption):
+
+```
+# on the computer
+rsync -av "$HOME/Dropbox/AllinTanzania/Website Gallery/" root@<droplet-ip>:allintanzania-website/gallery-import/
+# on the Droplet
+cd ~/allintanzania-website && docker compose --profile tools run --rm seed npm run import-gallery
+```
+
+Files already imported are skipped, so you can add more and run it again. Single photos can also be uploaded in the admin under Media, in the Gallery folder.
+
 ## Going live on allintanzania.com later
 
 1. Point the domain's A record (and `www`) to the Droplet's IP.
