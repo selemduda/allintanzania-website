@@ -4,6 +4,9 @@ import React, { useState } from 'react'
 
 import { getDict, type Lang } from '@/lib/i18n'
 
+import { CountrySelect } from './CountrySelect'
+import { MonthPicker } from './MonthPicker'
+
 type Props = {
   source: 'contact' | 'builder' | 'ai'
   trip?: unknown
@@ -59,7 +62,7 @@ export function EnquiryForm({ source, trip, compact, lang }: Props) {
         {!compact && (
           <div className="field">
             <label htmlFor="enq-country">{t.country}</label>
-            <input id="enq-country" name="country" autoComplete="country-name" />
+            <CountrySelect id="enq-country" name="country" lang={lang} />
           </div>
         )}
       </div>
@@ -67,7 +70,7 @@ export function EnquiryForm({ source, trip, compact, lang }: Props) {
         <div className="form-row">
           <div className="field">
             <label htmlFor="enq-month">{t.when}</label>
-            <input id="enq-month" name="travelMonth" placeholder={t.whenPlaceholder} />
+            <MonthPicker id="enq-month" name="travelMonth" lang={lang} />
           </div>
           <div className="field">
             <label htmlFor="enq-adults">{t.adults}</label>
