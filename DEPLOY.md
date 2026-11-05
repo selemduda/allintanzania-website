@@ -121,6 +121,20 @@ cd ~/allintanzania-website && docker compose --profile tools run --rm seed npm r
 
 Files already imported are skipped, so you can add more and run it again. Single photos can also be uploaded in the admin under Media, in the Gallery folder.
 
+## Moving to another server
+
+To move the site (for example from DigitalOcean to Hetzner) with everything in it, create an Ubuntu 24.04 server with at least 4 GB of memory and log in to it once so its root password is set. Then:
+
+```
+# on the old server: pack the database, uploaded files and settings into ~/aitz-move.tgz
+cd ~/allintanzania-website && git pull && bash scripts/server-backup.sh
+scp ~/aitz-move.tgz root@<new-server-ip>:
+# on the new server
+cd ~ && tar -xzf aitz-move.tgz && tar -xzf aitz-move/project.tgz && bash allintanzania-website/scripts/server-restore.sh
+```
+
+Then point the domain's A records (`@` and `www`) at the new IP; HTTPS starts by itself once DNS has moved. Enquiries sent to the old server after the backup are not copied, so move outside busy hours. Keep the old server for a few days before deleting it.
+
 ## Going live on allintanzania.com later
 
 1. Point the domain's A record (and `www`) to the Droplet's IP.
