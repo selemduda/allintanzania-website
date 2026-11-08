@@ -41,3 +41,4 @@ cheetahs-resting.jpg <- Dropbox: Safari Pictures 2021/IMG_5549.JPG
 golf-safari-arusha.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Golf Safari.jpg
 riverbed-dinner.jpg <- Dropbox: Safari Pictures 2021/IMG_6248.JPG
 lion-in-tree.jpg <- Dropbox: Safari Pictures 2021/IMG_2625.JPG
+kilimanjaro-summit-sunrise-climbers.jpg <- Dropbox: AllinTanzania/Pictures for Marketing/Social Media Pictures/Kilimanjaro.jpg

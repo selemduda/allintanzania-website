@@ -15,7 +15,8 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "vitest run",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/index.ts",
-    "import-gallery": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/importGallery.ts"
+    "import-gallery": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/importGallery.ts",
+    "replace-media": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/replaceMedia.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",
