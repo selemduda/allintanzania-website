@@ -67,33 +67,59 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    destinations: Destination;
+    lodges: Lodge;
+    itineraries: Itinerary;
+    posts: Post;
     media: Media;
-    folders: Folder;
-    tags: Tag;
+    enquiries: Enquiry;
+    'expert-chats': ExpertChat;
+    'price-lists': PriceList;
+    users: User;
     'payload-kv': PayloadKv;
+    'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    'payload-folders': {
+      documentsAndFolders: 'payload-folders' | 'media';
+    };
+  };
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    destinations: DestinationsSelect<false> | DestinationsSelect<true>;
+    lodges: LodgesSelect<false> | LodgesSelect<true>;
+    itineraries: ItinerariesSelect<false> | ItinerariesSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    folders: FoldersSelect<false> | FoldersSelect<true>;
-    tags: TagsSelect<false> | TagsSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    'expert-chats': ExpertChatsSelect<false> | ExpertChatsSelect<true>;
+    'price-lists': PriceListsSelect<false> | PriceListsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | 'en' | 'en'[];
-  globals: {};
-  globalsSelect: {};
-  locale: 'en';
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'no') | ('en' | 'no')[];
+  globals: {
+    'home-page': HomePage;
+    'site-settings': SiteSetting;
+    'pricing-settings': PricingSetting;
+    'expert-settings': ExpertSetting;
+  };
+  globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'pricing-settings': PricingSettingsSelect<false> | PricingSettingsSelect<true>;
+    'expert-settings': ExpertSettingsSelect<false> | ExpertSettingsSelect<true>;
+  };
+  locale: 'en' | 'no';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -121,8 +147,343 @@ export interface UserAuthOperations {
     password: string;
   };
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "destinations".
+ */
+export interface Destination {
+  id: number;
+  name: string;
+  /**
+   * Used in the page address. Leave empty to generate it from the name.
+   */
+  slug?: string | null;
+  region?: ('northern' | 'southern' | 'coast' | 'mountains') | null;
+  type?: ('park' | 'conservation' | 'reserve' | 'beach' | 'mountain' | 'town') | null;
+  /**
+   * Lower shows first
+   */
+  order?: number | null;
+  /**
+   * One line shown on cards, e.g. "Endless plains and the Great Migration"
+   */
+  tagline?: string | null;
+  heroImage?: (number | null) | Media;
+  summary: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Animals guests are likely to see
+   */
+  wildlife?: string[] | null;
+  bestMonths?: ('Jan' | 'Feb' | 'Mar' | 'Apr' | 'May' | 'Jun' | 'Jul' | 'Aug' | 'Sep' | 'Oct' | 'Nov' | 'Dec')[] | null;
+  /**
+   * Used by the trip builder and the AI expert as a starting suggestion
+   */
+  recommendedNights?: number | null;
+  /**
+   * Private tips for the AI safari expert (not shown on the website): insider knowledge, which camps to recommend, what to warn about.
+   */
+  expertNotes?: string | null;
+  gallery?: (number | Media)[] | null;
+  /**
+   * For the map, e.g. -2.33
+   */
+  latitude?: number | null;
+  /**
+   * e.g. 34.83
+   */
+  longitude?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Short description of the photo for search engines and screen readers.
+   */
+  alt: string;
+  caption?: string | null;
+  /**
+   * Photographer or guide who took the photo.
+   */
+  credit?: string | null;
+  source?: ('upload' | 'dropbox' | 'sample') | null;
+  dropboxPath?: string | null;
+  folder?: (number | null) | FolderInterface;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders".
+ */
+export interface FolderInterface {
+  id: number;
+  name: string;
+  folder?: (number | null) | FolderInterface;
+  documentsAndFolders?: {
+    docs?: (
+      | {
+          relationTo?: 'payload-folders';
+          value: number | FolderInterface;
+        }
+      | {
+          relationTo?: 'media';
+          value: number | Media;
+        }
+    )[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folderType?: 'media'[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lodges".
+ */
+export interface Lodge {
+  id: number;
+  name: string;
+  /**
+   * Used in the page address. Leave empty to generate it from the name.
+   */
+  slug?: string | null;
+  destination: number | Destination;
+  tier: 'comfort' | 'classic' | 'luxury';
+  style?: ('tented' | 'lodge' | 'mobile' | 'beach' | 'hotel') | null;
+  /**
+   * Must match the "item" column for this lodge in your uploaded price list, so the estimator uses its real rates.
+   */
+  priceCode?: string | null;
+  heroImage?: (number | null) | Media;
+  summary: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  amenities?: string[] | null;
+  gallery?: (number | Media)[] | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "itineraries".
+ */
+export interface Itinerary {
+  id: number;
+  title: string;
+  /**
+   * Used in the page address. Leave empty to generate it from the name.
+   */
+  slug?: string | null;
+  durationDays: number;
+  tier?: ('comfort' | 'classic' | 'luxury') | null;
+  /**
+   * USD per person sharing. Leave empty to calculate from the price list.
+   */
+  fromPrice?: number | null;
+  styles?:
+    ('migration' | 'classic' | 'beach' | 'honeymoon' | 'family' | 'kilimanjaro' | 'walking' | 'cultural')[] | null;
+  heroImage?: (number | null) | Media;
+  summary: string;
+  days?:
+    | {
+        /**
+         * e.g. "Day 1" or "Days 2–3"
+         */
+        dayRange: string;
+        title: string;
+        destination?: (number | null) | Destination;
+        lodge?: (number | null) | Lodge;
+        nights?: number | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  included?: string[] | null;
+  excluded?: string[] | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * Used in the page address. Leave empty to generate it from the name.
+   */
+  slug?: string | null;
+  publishedAt?: string | null;
+  author?: string | null;
+  heroImage?: (number | null) | Media;
+  excerpt?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  country?: string | null;
+  travelMonth?: string | null;
+  adults?: number | null;
+  children?: number | null;
+  message?: string | null;
+  /**
+   * The dream trip the visitor built (parks, nights, lodge level).
+   */
+  trip?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Estimated total in USD
+   */
+  estimateTotal?: number | null;
+  estimate?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  chatTranscript?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  source?: ('contact' | 'builder' | 'ai') | null;
+  /**
+   * The website language the visitor used: reply in it.
+   */
+  language?: ('en' | 'no') | null;
+  status?: ('new' | 'contacted' | 'quoted' | 'booked' | 'lost') | null;
+  assignedTo?: (number | null) | User;
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
 export interface User {
-  id: string;
+  id: number;
+  name?: string | null;
+  roles: ('admin' | 'editor' | 'sales')[];
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -130,6 +491,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -143,14 +505,85 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Conversations with the AI safari expert on the website.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "expert-chats".
  */
-export interface Media {
-  id: string;
-  alt: string;
-  _h_folders?: (string | null) | Folder;
-  _h_tags?: (string | Tag)[] | null;
+export interface ExpertChat {
+  id: number;
+  /**
+   * The visitor's first question.
+   */
+  summary?: string | null;
+  turns?: number | null;
+  enquiry?: (number | null) | Enquiry;
+  /**
+   * What the visitor and the expert said.
+   */
+  transcript?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  token?: string | null;
+  messages?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Upload your rate sheet (Excel or CSV). Download the template from /price-list-template.csv to see the columns. The active list drives the trip estimator and the AI expert.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "price-lists".
+ */
+export interface PriceList {
+  id: number;
+  /**
+   * e.g. "2027 rates v1"
+   */
+  name: string;
+  /**
+   * Only one list is active at a time.
+   */
+  active?: boolean | null;
+  rowCount?: number | null;
+  /**
+   * Rows that could not be read. Fix them in the sheet and upload again.
+   */
+  parseErrors?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Rates read from the file.
+   */
+  rates?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -165,32 +598,10 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "folders".
+ * via the `definition` "payload-kv".
  */
-export interface Folder {
-  id: string;
-  _h_folders?: (string | null) | Folder;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-  _h_slugPath?: string | null;
-  _h_titlePath?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags".
- */
-export interface Tag {
-  id: string;
-  _h_tags?: (string | null) | Tag;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-  _h_slugPath?: string | null;
-  _h_titlePath?: string | null;
-}
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -207,28 +618,52 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
+        relationTo: 'destinations';
+        value: number | Destination;
+      } | null)
+    | ({
+        relationTo: 'lodges';
+        value: number | Lodge;
+      } | null)
+    | ({
+        relationTo: 'itineraries';
+        value: number | Itinerary;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
       } | null)
     | ({
-        relationTo: 'folders';
-        value: string | Folder;
+        relationTo: 'enquiries';
+        value: number | Enquiry;
       } | null)
     | ({
-        relationTo: 'tags';
-        value: string | Tag;
+        relationTo: 'expert-chats';
+        value: number | ExpertChat;
+      } | null)
+    | ({
+        relationTo: 'price-lists';
+        value: number | PriceList;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'payload-folders';
+        value: number | FolderInterface;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -238,10 +673,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -261,7 +696,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -269,25 +704,102 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "destinations_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface DestinationsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  region?: T;
+  type?: T;
+  order?: T;
+  tagline?: T;
+  heroImage?: T;
+  summary?: T;
+  body?: T;
+  highlights?:
     | T
     | {
+        text?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  wildlife?: T;
+  bestMonths?: T;
+  recommendedNights?: T;
+  expertNotes?: T;
+  gallery?: T;
+  latitude?: T;
+  longitude?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lodges_select".
+ */
+export interface LodgesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  destination?: T;
+  tier?: T;
+  style?: T;
+  priceCode?: T;
+  heroImage?: T;
+  summary?: T;
+  body?: T;
+  amenities?: T;
+  gallery?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "itineraries_select".
+ */
+export interface ItinerariesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  durationDays?: T;
+  tier?: T;
+  fromPrice?: T;
+  styles?: T;
+  heroImage?: T;
+  summary?: T;
+  days?:
+    | T
+    | {
+        dayRange?: T;
+        title?: T;
+        destination?: T;
+        lodge?: T;
+        nights?: T;
+        description?: T;
+        id?: T;
+      };
+  included?: T;
+  excluded?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedAt?: T;
+  author?: T;
+  heroImage?: T;
+  excerpt?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -295,8 +807,106 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  _h_folders?: T;
-  _h_tags?: T;
+  caption?: T;
+  credit?: T;
+  source?: T;
+  dropboxPath?: T;
+  folder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  country?: T;
+  travelMonth?: T;
+  adults?: T;
+  children?: T;
+  message?: T;
+  trip?: T;
+  estimateTotal?: T;
+  estimate?: T;
+  chatTranscript?: T;
+  source?: T;
+  language?: T;
+  status?: T;
+  assignedTo?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expert-chats_select".
+ */
+export interface ExpertChatsSelect<T extends boolean = true> {
+  summary?: T;
+  turns?: T;
+  enquiry?: T;
+  transcript?: T;
+  token?: T;
+  messages?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "price-lists_select".
+ */
+export interface PriceListsSelect<T extends boolean = true> {
+  name?: T;
+  active?: T;
+  rowCount?: T;
+  parseErrors?: T;
+  rates?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -311,31 +921,48 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "folders_select".
+ * via the `definition` "users_select".
  */
-export interface FoldersSelect<T extends boolean = true> {
-  _h_folders?: T;
+export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
-  _h_slugPath?: T;
-  _h_titlePath?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "tags_select".
+ * via the `definition` "payload-kv_select".
  */
-export interface TagsSelect<T extends boolean = true> {
-  _h_tags?: T;
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _h_slugPath?: T;
-  _h_titlePath?: T;
-}
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders_select".
+ */
+export interface PayloadFoldersSelect<T extends boolean = true> {
+  name?: T;
+  folder?: T;
+  documentsAndFolders?: T;
+  folderType?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -368,6 +995,314 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  /**
+   * Full-screen images that fade on the home page. The first one loads first.
+   */
+  heroSlides?:
+    | {
+        image: number | Media;
+        eyebrow?: string | null;
+        heading: string;
+        id?: string | null;
+      }[]
+    | null;
+  heroSubheading?: string | null;
+  intro?: {
+    heading?: string | null;
+    body?: string | null;
+    image?: (number | null) | Media;
+  };
+  featuredDestinations?: (number | Destination)[] | null;
+  featuredItineraries?: (number | Itinerary)[] | null;
+  pillars?:
+    | {
+        title: string;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  testimonials?:
+    | {
+        quote: string;
+        author: string;
+        origin?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  expertBanner?: {
+    heading?: string | null;
+    body?: string | null;
+    image?: (number | null) | Media;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  companyName?: string | null;
+  tagline?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  /**
+   * International format, e.g. +255712345678
+   */
+  whatsapp?: string | null;
+  address?: string | null;
+  addressTanzania?: string | null;
+  social?:
+    | {
+        platform: 'instagram' | 'facebook' | 'youtube' | 'tiktok' | 'tripadvisor' | 'linkedin' | 'x';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Who gets an email when a visitor sends an enquiry.
+   */
+  enquiryRecipients?: string[] | null;
+  footerNote?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * How the trip estimator turns your price list into a quote.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing-settings".
+ */
+export interface PricingSetting {
+  id: number;
+  /**
+   * When off, visitors see "price on request": the trip builder and the AI expert collect trip details and send them to the team for a quote. Staff still see the internal estimate on each enquiry. Turn on once your real price list is uploaded.
+   */
+  showPrices?: boolean | null;
+  /**
+   * Which season each month falls in.
+   */
+  seasons: {
+    jan: 'low' | 'high' | 'peak';
+    feb: 'low' | 'high' | 'peak';
+    mar: 'low' | 'high' | 'peak';
+    apr: 'low' | 'high' | 'peak';
+    may: 'low' | 'high' | 'peak';
+    jun: 'low' | 'high' | 'peak';
+    jul: 'low' | 'high' | 'peak';
+    aug: 'low' | 'high' | 'peak';
+    sep: 'low' | 'high' | 'peak';
+    oct: 'low' | 'high' | 'peak';
+    nov: 'low' | 'high' | 'peak';
+    dec: 'low' | 'high' | 'peak';
+  };
+  /**
+   * Added on top of costs
+   */
+  markupPercent?: number | null;
+  /**
+   * Guests per safari vehicle
+   */
+  vehicleCapacity?: number | null;
+  /**
+   * Show estimates as a range of ± this percent
+   */
+  rangePercent?: number | null;
+  childAgeLimit?: number | null;
+  /**
+   * Used when the price list has no rate for a lodge in a park. USD per person per night sharing.
+   */
+  fallbackLodgeRates?: {
+    comfort?: number | null;
+    classic?: number | null;
+    luxury?: number | null;
+  };
+  disclaimer?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expert-settings".
+ */
+export interface ExpertSetting {
+  id: number;
+  enabled?: boolean | null;
+  expertName?: string | null;
+  expertTitle?: string | null;
+  avatar?: (number | null) | Media;
+  greeting?: string | null;
+  /**
+   * How the expert should speak and behave. Write it like a briefing to a new guide. Not shown on the website.
+   */
+  personality?: string | null;
+  /**
+   * Company facts the expert should know (licences, years in business, policies).
+   */
+  facts?:
+    | {
+        fact: string;
+        id?: string | null;
+      }[]
+    | null;
+  voice?: {
+    provider?: ('browser' | 'elevenlabs') | null;
+    /**
+     * Voice ID from the provider (e.g. a cloned voice of one of your guides).
+     */
+    voiceId?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  heroSlides?:
+    | T
+    | {
+        image?: T;
+        eyebrow?: T;
+        heading?: T;
+        id?: T;
+      };
+  heroSubheading?: T;
+  intro?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        image?: T;
+      };
+  featuredDestinations?: T;
+  featuredItineraries?: T;
+  pillars?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  testimonials?:
+    | T
+    | {
+        quote?: T;
+        author?: T;
+        origin?: T;
+        id?: T;
+      };
+  expertBanner?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        image?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  companyName?: T;
+  tagline?: T;
+  email?: T;
+  phone?: T;
+  whatsapp?: T;
+  address?: T;
+  addressTanzania?: T;
+  social?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  enquiryRecipients?: T;
+  footerNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing-settings_select".
+ */
+export interface PricingSettingsSelect<T extends boolean = true> {
+  showPrices?: T;
+  seasons?:
+    | T
+    | {
+        jan?: T;
+        feb?: T;
+        mar?: T;
+        apr?: T;
+        may?: T;
+        jun?: T;
+        jul?: T;
+        aug?: T;
+        sep?: T;
+        oct?: T;
+        nov?: T;
+        dec?: T;
+      };
+  markupPercent?: T;
+  vehicleCapacity?: T;
+  rangePercent?: T;
+  childAgeLimit?: T;
+  fallbackLodgeRates?:
+    | T
+    | {
+        comfort?: T;
+        classic?: T;
+        luxury?: T;
+      };
+  disclaimer?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expert-settings_select".
+ */
+export interface ExpertSettingsSelect<T extends boolean = true> {
+  enabled?: T;
+  expertName?: T;
+  expertTitle?: T;
+  avatar?: T;
+  greeting?: T;
+  personality?: T;
+  facts?:
+    | T
+    | {
+        fact?: T;
+        id?: T;
+      };
+  voice?:
+    | T
+    | {
+        provider?: T;
+        voiceId?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

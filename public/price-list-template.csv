@@ -1,0 +1,50 @@
+category,item,destination,tier,season,unit,adult,child,notes
+lodge,Serengeti Comfort Tented Camp,serengeti,comfort,all,per_person_per_night,190,95,SAMPLE RATE - replace with your contract rates
+lodge,Serengeti Classic Migration Camp,serengeti,classic,low,per_person_per_night,330,165,SAMPLE
+lodge,Serengeti Classic Migration Camp,serengeti,classic,high,per_person_per_night,420,210,SAMPLE
+lodge,Serengeti Classic Migration Camp,serengeti,classic,peak,per_person_per_night,495,250,SAMPLE
+lodge,Serengeti Luxury Lodge,serengeti,luxury,low,per_person_per_night,780,390,SAMPLE
+lodge,Serengeti Luxury Lodge,serengeti,luxury,high,per_person_per_night,1050,525,SAMPLE
+lodge,Serengeti Luxury Lodge,serengeti,luxury,peak,per_person_per_night,1250,625,SAMPLE
+lodge,Ngorongoro Farm Lodge,ngorongoro,comfort,all,per_person_per_night,160,80,SAMPLE (Karatu)
+lodge,Ngorongoro Crater Rim Lodge,ngorongoro,classic,all,per_person_per_night,360,180,SAMPLE
+lodge,Ngorongoro Crater Rim Luxury,ngorongoro,luxury,all,per_person_per_night,980,490,SAMPLE
+lodge,Tarangire Comfort Camp,tarangire,comfort,all,per_person_per_night,170,85,SAMPLE
+lodge,Tarangire River Camp,tarangire,classic,all,per_person_per_night,310,155,SAMPLE
+lodge,Tarangire Treetops,tarangire,luxury,all,per_person_per_night,720,360,SAMPLE
+lodge,Lake Manyara Lodge,lake-manyara,classic,all,per_person_per_night,280,140,SAMPLE
+lodge,Ruaha River Camp,ruaha,classic,all,per_person_per_night,350,175,SAMPLE
+lodge,Ruaha Luxury Camp,ruaha,luxury,all,per_person_per_night,850,425,SAMPLE
+lodge,Nyerere Tented Camp,nyerere,classic,all,per_person_per_night,340,170,SAMPLE
+lodge,Zanzibar Beach Hotel,zanzibar,comfort,all,per_person_per_night,120,60,SAMPLE (half board)
+lodge,Zanzibar Boutique Beach Resort,zanzibar,classic,all,per_person_per_night,240,120,SAMPLE
+lodge,Zanzibar Luxury Island Resort,zanzibar,luxury,all,per_person_per_night,650,325,SAMPLE
+lodge,Arusha Coffee Lodge,arusha,classic,all,per_person_per_night,180,90,SAMPLE
+lodge,Mikumi Tented Camp,mikumi,comfort,all,per_person_per_night,150,75,SAMPLE
+lodge,Mikumi Classic Camp,mikumi,classic,all,per_person_per_night,260,130,SAMPLE
+lodge,Udzungwa Forest Tented Camp,udzungwa,comfort,all,per_person_per_night,130,65,SAMPLE
+lodge,Mafia Island Beach Lodge,mafia-island,classic,all,per_person_per_night,210,105,SAMPLE (half board)
+lodge,Kilimanjaro climb (Machame route) all-inclusive,kilimanjaro,,all,per_person_per_night,330,,SAMPLE - guides porters camping meals
+lodge,Ruaha Comfort Camp,ruaha,comfort,all,per_person_per_night,190,95,SAMPLE
+lodge,Nyerere Comfort Camp,nyerere,comfort,all,per_person_per_night,180,90,SAMPLE
+lodge,Nyerere Luxury Lodge,nyerere,luxury,all,per_person_per_night,780,390,SAMPLE
+park_fee,Serengeti park fee,serengeti,,all,per_person_per_day,82.6,23.6,SAMPLE - check current TANAPA fees
+park_fee,Serengeti concession fee,serengeti,,all,per_person_per_day,59,11.8,SAMPLE
+park_fee,Ngorongoro conservation fee,ngorongoro,,all,per_person_per_day,70.8,23.6,SAMPLE - check current NCAA fees
+park_fee,Tarangire park fee,tarangire,,all,per_person_per_day,59,17.7,SAMPLE
+park_fee,Lake Manyara park fee,lake-manyara,,all,per_person_per_day,59,17.7,SAMPLE
+park_fee,Ruaha park fee,ruaha,,all,per_person_per_day,35.4,11.8,SAMPLE
+park_fee,Nyerere park fee,nyerere,,all,per_person_per_day,82.6,23.6,SAMPLE
+park_fee,Mikumi park fee,mikumi,,all,per_person_per_day,35.4,11.8,SAMPLE
+park_fee,Udzungwa park fee,udzungwa,,all,per_person_per_day,35.4,11.8,SAMPLE
+park_fee,Kilimanjaro park and rescue fees,kilimanjaro,,all,per_person_per_day,82.6,23.6,SAMPLE
+park_fee,Mafia Island Marine Park fee,mafia-island,,all,per_person_per_day,23.6,11.8,SAMPLE
+vehicle,Private 4x4 Land Cruiser with fuel,,,all,per_vehicle_per_day,280,,SAMPLE
+guide,Professional driver-guide,,,all,per_vehicle_per_day,60,,SAMPLE
+transfer,Kilimanjaro airport transfers (arrival and departure),,,all,per_group,120,,SAMPLE
+flight,Bush flight Dar es Salaam to Ruaha,ruaha,,all,per_person,420,380,SAMPLE
+flight,Flight Dar es Salaam to Mafia Island,mafia-island,,all,per_person,190,170,SAMPLE
+flight,Flight Arusha to Zanzibar,zanzibar,,all,per_person,240,200,SAMPLE
+activity,Hot air balloon over the Serengeti,,,all,per_person,599,599,SAMPLE
+activity,Maasai village visit,,,all,per_person,40,20,SAMPLE
+activity,Walking safari with armed ranger,,,all,per_person,60,,SAMPLE

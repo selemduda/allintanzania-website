@@ -1,0 +1,10 @@
+# Serves the site on SITE_DOMAIN with automatic HTTPS.
+# REDIRECT_DOMAINS (comma-separated, e.g. www.allintanzania.com) are sent to SITE_DOMAIN.
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
+
+{$REDIRECT_DOMAINS:redirect.localhost} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}
