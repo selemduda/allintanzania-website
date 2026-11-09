@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 
+import { track } from '@/lib/analytics'
 import { getDict, type Lang } from '@/lib/i18n'
 
 import { CountrySelect } from './CountrySelect'
@@ -31,6 +32,7 @@ export function EnquiryForm({ source, trip, compact, lang }: Props) {
       })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error || t.error)
+      track('generate_lead', { form: source || 'enquiry', language: lang })
       setState('sent')
     } catch (err) {
       setError((err as Error).message)
