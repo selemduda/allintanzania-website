@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import { Lato, Playfair_Display } from 'next/font/google'
 import React from 'react'
 
+import { CookieConsent } from '@/components/CookieConsent'
 import { ExpertLauncher } from '@/components/ExpertLauncher'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
+import { gaId } from '@/lib/analytics'
 import { getPublicExpert, getSiteSettings } from '@/lib/payload'
 import { getDict, HTML_LANG } from '@/lib/i18n'
 import { pageLang } from '@/lib/pageLang'
@@ -38,6 +40,7 @@ type Props = { children: React.ReactNode; params: Promise<{ lang: string }> }
 
 export default async function RootLayout({ children, params }: Props) {
   const lang = await pageLang(params)
+  const analyticsId = gaId()
   const [expert, site] = await Promise.all([getPublicExpert(lang), getSiteSettings(lang)])
   const organization = {
     '@context': 'https://schema.org',
@@ -57,8 +60,9 @@ export default async function RootLayout({ children, params }: Props) {
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organization)} />
         <Header lang={lang} />
         <main>{children}</main>
-        <Footer lang={lang} />
+        <Footer lang={lang} cookieSettings={Boolean(analyticsId)} />
         {expert.enabled && <ExpertLauncher expert={expert} lang={lang} />}
+        {analyticsId && <CookieConsent gaId={analyticsId} t={getDict(lang).cookies} />}
       </body>
     </html>
   )

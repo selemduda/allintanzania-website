@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { EnquiryForm } from '@/components/EnquiryForm'
+import { track } from '@/lib/analytics'
 import { usd } from '@/lib/format'
 import { getDict, localePath, type Lang } from '@/lib/i18n'
 import type { PublicExpert } from '@/lib/payload'
@@ -166,6 +167,7 @@ export function ExpertChat({ expert, initialQuestion, lang }: { expert: PublicEx
       if (!message || busy) return
       setInput('')
       setBusy(true)
+      track('expert_message', { language: lang })
       setItems((list) => [...list, { kind: 'visitor', text: message }, { kind: 'expert', text: '', status: t.thinking }])
 
       const updateExpert = (fn: (item: Extract<Item, { kind: 'expert' }>) => Item) =>
