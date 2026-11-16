@@ -18,6 +18,7 @@ import { PriceLists } from './collections/PriceLists'
 import { Users } from './collections/Users'
 import { migrations } from './migrations'
 import { ExpertSettings } from './globals/ExpertSettings'
+import { AboutPage } from './globals/AboutPage'
 import { HomePage } from './globals/HomePage'
 import { PricingSettings } from './globals/PricingSettings'
 import { SiteSettings } from './globals/SiteSettings'
@@ -69,7 +70,7 @@ export default buildConfig({
     PriceLists,
     Users,
   ],
-  globals: [HomePage, SiteSettings, PricingSettings, ExpertSettings],
+  globals: [HomePage, AboutPage, SiteSettings, PricingSettings, ExpertSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

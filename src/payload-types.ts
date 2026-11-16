@@ -109,12 +109,14 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'no') | ('en' | 'no')[];
   globals: {
     'home-page': HomePage;
+    'about-page': AboutPage;
     'site-settings': SiteSetting;
     'pricing-settings': PricingSetting;
     'expert-settings': ExpertSetting;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'pricing-settings': PricingSettingsSelect<false> | PricingSettingsSelect<true>;
     'expert-settings': ExpertSettingsSelect<false> | ExpertSettingsSelect<true>;
@@ -1046,6 +1048,51 @@ export interface HomePage {
   createdAt?: string | null;
 }
 /**
+ * The About us page. Switch the language at the top to edit the Norwegian version.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  /**
+   * Show the All in Tanzania logo above the heading.
+   */
+  showLogo?: boolean | null;
+  heading?: string | null;
+  intro?: string | null;
+  /**
+   * Optional. Shown full width under the intro text.
+   */
+  image?: (number | null) | Media;
+  /**
+   * Text blocks with an optional photo, e.g. "Our story", "Our guides", "Our office in Norway".
+   */
+  sections?:
+    | {
+        heading?: string | null;
+        body: string;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The boxes on the dark band.
+   */
+  values?:
+    | {
+        title: string;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  closingHeading?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
@@ -1210,6 +1257,37 @@ export interface HomePageSelect<T extends boolean = true> {
         image?: T;
       };
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  showLogo?: T;
+  heading?: T;
+  intro?: T;
+  image?: T;
+  sections?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        image?: T;
+        id?: T;
+      };
+  values?:
+    | T
+    | {
+        title?: T;
+        body?: T;
+        id?: T;
+      };
+  closingHeading?: T;
+  metaTitle?: T;
+  metaDescription?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
