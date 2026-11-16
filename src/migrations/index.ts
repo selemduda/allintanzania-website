@@ -3,6 +3,7 @@ import * as migration_20261028_132653_expert_chats_and_price_switch from './2026
 import * as migration_20261028_174041_norwegian_localization from './20261028_174041_norwegian_localization';
 import * as migration_20261028_174834_enquiry_language from './20261028_174834_enquiry_language';
 import * as migration_20261030_105729_office_addresses from './20261030_105729_office_addresses';
+import * as migration_20261116_090250_about_page from './20261116_090250_about_page';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261030_105729_office_addresses.up,
     down: migration_20261030_105729_office_addresses.down,
-    name: '20261030_105729_office_addresses'
+    name: '20261030_105729_office_addresses',
+  },
+  {
+    up: migration_20261116_090250_about_page.up,
+    down: migration_20261116_090250_about_page.down,
+    name: '20261116_090250_about_page'
   },
 ];
