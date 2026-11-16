@@ -2,10 +2,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
+import { CookieSettingsLink } from '@/components/CookieConsent'
 import { getDict, localePath, type Lang } from '@/lib/i18n'
 import { getSiteSettings } from '@/lib/payload'
 
-export async function Footer({ lang }: { lang: Lang }) {
+export async function Footer({ lang, cookieSettings = false }: { lang: Lang; cookieSettings?: boolean }) {
   const site = await getSiteSettings(lang)
   const t = getDict(lang)
   const href = (path: string) => localePath(lang, path)
@@ -66,6 +67,7 @@ export async function Footer({ lang }: { lang: Lang }) {
       </div>
       <div className="container footer-bottom">
         <span>© {year} {site.companyName || 'All in Tanzania'}</span>
+        {cookieSettings && <CookieSettingsLink label={t.footer.cookieSettings} />}
         <span className="tagline">{site.tagline}</span>
       </div>
     </footer>

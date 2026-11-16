@@ -141,3 +141,11 @@ Then point the domain's A records (`@` and `www`) at the new IP; HTTPS starts by
 2. Change `SITE_DOMAIN` to `allintanzania.com` and `NEXT_PUBLIC_SERVER_URL` to `https://allintanzania.com` in `.env`, and set `SITE_INDEXABLE=true` so search engines may index the site (the test site keeps it off). Set `REDIRECT_DOMAINS=www.allintanzania.com, allintanzania.seltechtz.com` so `www` and the old test address redirect to the main site.
 3. Run `docker compose up -d --build`. Caddy fetches the certificate automatically.
 4. Add the site to [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters) (Bing also feeds DuckDuckGo and Ecosia), and submit `https://allintanzania.com/sitemap.xml` in both.
+
+## Google Analytics and the cookie banner
+
+1. In [Google Analytics](https://analytics.google.com), create a GA4 property for allintanzania.com (time zone Oslo, currency NOK) and a Web data stream for `https://allintanzania.com`. Copy its Measurement ID, which looks like `G-AB12CD34EF`.
+2. On the server, add `GA_MEASUREMENT_ID=G-AB12CD34EF` to `.env` and run `docker compose up -d`.
+3. The site then shows a cookie banner in English or Norwegian. Google Analytics loads only for visitors who press Accept; a "Cookie settings" link in the footer lets them change their mind. With no ID set, there is no banner and no tracking.
+
+Events sent besides page views: `generate_lead` when an enquiry is sent (marks it as a key event in GA4 under Admin, Events) and `expert_message` when a visitor writes to Baraka. Add `utm_source`, `utm_medium` and `utm_campaign` to links in social posts so GA4 shows which platform sent each visitor.
